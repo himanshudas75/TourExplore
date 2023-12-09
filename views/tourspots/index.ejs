@@ -1,0 +1,35 @@
+<% layout('layouts/boilerplate')%>
+    <h1>All Tourist Spots</h1>
+    <div class="container mb-3">
+        <a class="btn btn-primary" href="/tourspots/new">Add Tourist Spot</a>
+    </div>
+    <ul>
+        <% for(let tourspot of tourspots) { %>
+
+            <div class="card mb-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="<%= tourspot.image%>" class="img-fluid" alt="">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="/tourspots/<%= tourspot._id%>">
+                                    <%= tourspot.title%>
+                                </a>
+                            </h5>
+                            <p class="card-text">
+                                <%= tourspot.description%>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <%= tourspot.location%>
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <% } %>
+    </ul>
