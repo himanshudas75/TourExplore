@@ -6,10 +6,17 @@ const methodOverride = require("method-override");
 const morgan = require("morgan");
 const ejsMate = require("ejs-mate");
 const flash = require("connect-flash");
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+
+const User = require('./models/user');
 
 const ExpressError = require("./utils/ExpressError");
+
+// Routes
 const tourspotRoutes = require("./routes/tourspots");
 const reviewRoutes = require("./routes/reviews");
+const userRoutes = require("./routes/users");
 
 require("dotenv").config();
 
@@ -46,6 +53,14 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());    // Make sure this line is after app.use(session())
+
+// Passport configs
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 // Middleware for flash
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
@@ -54,6 +69,7 @@ app.use((req, res, next) => {
 })
 
 // Routes
+app.use("/", userRoutes);
 app.use("/tourspots", tourspotRoutes);
 app.use("/tourspots/:id/reviews", reviewRoutes);
 
