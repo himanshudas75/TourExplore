@@ -14,6 +14,17 @@ imageSchema.virtual('thumbnail').get(function () {
 const tourspotSchema = new Schema({
     title: String,
     images: [imageSchema],
+    geometry: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true,
+        },
+        coordinates: {
+            type: [Number],
+            required: true,
+        },
+    },
     expected_budget: Number,
     description: String,
     location: String,

@@ -9,11 +9,19 @@
     <div class="card mb-3">
         <div class="row">
             <div class="col-md-4">
+                <% if (tourspot.images.length) { %>
                 <img
                     src="<%= tourspot.images[0].url%>"
                     class="img-fluid"
                     alt=""
                 />
+                <% } else { %>
+                <img
+                    src="https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                    class="img-fluid"
+                    alt=""
+                />
+                <% } %>
             </div>
             <div class="col-md-8">
                 <div class="card-body">

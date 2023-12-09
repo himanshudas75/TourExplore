@@ -2,6 +2,10 @@
 <link rel="stylesheet" href="/css/stars.css" />
 
 <div class="row">
+    <div
+        id="myMap"
+        style="position: relative; width: 600px; height: 400px"
+    ></div>
     <div class="col-6">
         <div id="tourspotCarousel" class="carousel slide">
             <div class="carousel-inner">
@@ -170,3 +174,10 @@
         <%}%>
     </div>
 </div>
+
+<script>
+    const mapToken = '<%-process.env.BING_API_KEY%>';
+    const tourspot = <%- JSON.stringify(tourspot) %>;
+</script>
+
+<script src="/js/showPageMap.js"></script>

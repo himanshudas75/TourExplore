@@ -1,5 +1,6 @@
 const Tourspot = require('../models/tourspot');
 const { cloudinary } = require('../cloudinary');
+const { findLocation } = require('../utils/findLocation');
 
 module.exports.index = async (req, res) => {
     const tourspots = await Tourspot.find({});
@@ -17,6 +18,8 @@ module.exports.createTourspot = async (req, res) => {
         filename: f.filename,
     }));
     tourspot.author = req.user._id;
+    tourspot.geometry = await findLocation(tourspot.location);
+    console.log(tourspot);
     await tourspot.save();
     req.flash('success', 'Successfully created new Tourist Spot!');
     res.redirect(`/tourspots/${tourspot._id}`);
