@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Review = require('./review');
+const mongoose = require("mongoose");
+const Review = require("./review");
 const Schema = mongoose.Schema;
 
 const tourspotSchema = new Schema({
@@ -8,22 +8,26 @@ const tourspotSchema = new Schema({
     expected_budget: Number,
     description: String,
     location: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'Review'
-        }
+            ref: "Review",
+        },
     ],
 });
 
-tourspotSchema.post('findOneAndDelete', async function (doc) {
+tourspotSchema.post("findOneAndDelete", async function (doc) {
     if (doc) {
         await Review.deleteMany({
             _id: {
-                $in: doc.reviews
-            }
-        })
+                $in: doc.reviews,
+            },
+        });
     }
 });
 
-module.exports = mongoose.model('Tourspot', tourspotSchema);
+module.exports = mongoose.model("Tourspot", tourspotSchema);

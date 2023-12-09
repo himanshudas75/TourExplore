@@ -1,64 +1,98 @@
 <% layout('layouts/boilerplate')%>
 
-    <div class="row">
-        <div class="col-6">
-            <div class="card mb-3">
-                <img src="<%= tourspot.image%>" class="card-img-top" alt="">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <%= tourspot.title %>
-                    </h5>
-                    <p class="card-text">
-                        <%= tourspot.description%>
-                    </p>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item text-muted">
-                        <%= tourspot.location %>
-                    </li>
-                    <li class="list-group-item">
-                        ₹ <%= tourspot.expected_budget%>
-                    </li>
-                </ul>
-                <div class="card-body">
-                    <a href="/tourspots/<%= tourspot._id %>/edit" class="card-link btn btn-info">Edit</a>
-                    <form class="d-inline" action="/tourspots/<%= tourspot._id%>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    2 days ago
-                </div>
+<div class="row">
+    <div class="col-6">
+        <div class="card mb-3">
+            <img src="<%= tourspot.image%>" class="card-img-top" alt="" />
+            <div class="card-body">
+                <h5 class="card-title"><%= tourspot.title %></h5>
+                <p class="card-text"><%= tourspot.description%></p>
             </div>
-        </div>
-        <div class="col-6">
-            <h2>Leave a Review</h2>
-            <form action="/tourspots/<%= tourspot._id%>/reviews" method="POST" class="needs-validation mb-3" novalidate>
-                <div class="mb-3">
-                    <label class="form-label" for="rating">Rating</label>
-                    <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="body">Review</label>
-                    <textarea class="form-control" type="text" id="body" name="review[body]" required></textarea>
-                </div>
-                <button class="btn btn-primary">Submit</button>
-            </form>
-            <% for (let review of tourspot.reviews) {%>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Rating: <%= review.rating%>
-                        </h5>
-                        <p class="card-text">
-                            <%= review.body%>
-                        </p>
-                        <form action="/tourspots/<%=tourspot._id%>/reviews/<%=review._id%>?_method=DELETE"
-                            method="POST">
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </form>
-                    </div>
-                </div>
-                <%}%>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item text-muted">
+                    <%= tourspot.location %>
+                </li>
+                <li class="list-group-item">
+                    Submitted by <%= tourspot.author.username %>
+                </li>
+                <li class="list-group-item">
+                    ₹ <%= tourspot.expected_budget%>
+                </li>
+            </ul>
+
+            <!-- Display only if user is authorized to edit and delete -->
+            <% if (currentUser && tourspot.author.equals(currentUser)) { %>
+            <div class="card-body">
+                <a
+                    href="/tourspots/<%= tourspot._id %>/edit"
+                    class="card-link btn btn-info"
+                    >Edit</a
+                >
+                <form
+                    class="d-inline"
+                    action="/tourspots/<%= tourspot._id%>?_method=DELETE"
+                    method="POST"
+                >
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+            <% } %>
+
+            <div class="card-footer text-muted">2 days ago</div>
         </div>
     </div>
+    <div class="col-6">
+        <!-- Show this form only for signed in users -->
+        <% if (currentUser) { %>
+        <h2>Leave a Review</h2>
+        <form
+            action="/tourspots/<%= tourspot._id%>/reviews"
+            method="POST"
+            class="needs-validation mb-3"
+            novalidate
+        >
+            <div class="mb-3">
+                <label class="form-label" for="rating">Rating</label>
+                <input
+                    class="form-range"
+                    type="range"
+                    min="1"
+                    max="5"
+                    name="review[rating]"
+                    id="rating"
+                    required
+                />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="body">Review</label>
+                <textarea
+                    class="form-control"
+                    type="text"
+                    id="body"
+                    name="review[body]"
+                    required
+                ></textarea>
+            </div>
+            <button class="btn btn-primary">Submit</button>
+        </form>
+        <% } %> <% for (let review of tourspot.reviews) {%>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Rating: <%= review.rating%></h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">
+                    By <%= review.author.username%>
+                </h6>
+                <p class="card-text"><%= review.body%></p>
+                <% if (currentUser && review.author.equals(currentUser)) { %>
+                <form
+                    action="/tourspots/<%=tourspot._id%>/reviews/<%=review._id%>?_method=DELETE"
+                    method="POST"
+                >
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                </form>
+                <% } %>
+            </div>
+        </div>
+        <%}%>
+    </div>
+</div>

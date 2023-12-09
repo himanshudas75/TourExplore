@@ -1,46 +1,80 @@
 <% layout('layouts/boilerplate')%>
 
-    <div class="row">
-        <h1 class="text-center">New Tourist Spot</h1>
-        <div class="col-6 offset-3">
+<div class="row">
+    <h1 class="text-center">New Tourist Spot</h1>
+    <div class="col-6 offset-3">
+        <form
+            class="needs-validation"
+            action="/tourspots/new"
+            method="POST"
+            novalidate
+        >
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input
+                    class="form-control"
+                    type="text"
+                    id="title"
+                    name="tourspot[title]"
+                    required
+                />
+            </div>
 
-            <form class="needs-validation" action="/tourspots" method="POST" novalidate>
-                <div class="mb-3">
-                    <label class="form-label" for="title">Title</label>
-                    <input class="form-control" type="text" id="title" name="tourspot[title]" required>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <input
+                    class="form-control"
+                    type="text"
+                    id="location"
+                    name="tourspot[location]"
+                    required
+                />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="image">Image URL</label>
+                <input
+                    class="form-control"
+                    type="text"
+                    id="image"
+                    name="tourspot[image]"
+                    required
+                />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="expected_budget"
+                    >Expected Budget</label
+                >
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="expected_budget">₹</span>
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="0"
+                        aria-label="expected_budget"
+                        aria-describedby="expected_budget"
+                        name="tourspot[expected_budget]"
+                        required
+                    />
                 </div>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="location">Location</label>
-                    <input class="form-control" type="text" id="location" name="tourspot[location]" required>
-                </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea
+                    class="form-control"
+                    type="text"
+                    id="description"
+                    name="tourspot[description]"
+                    required
+                ></textarea>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="image">Image URL</label>
-                    <input class="form-control" type="text" id="image" name="tourspot[image]" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label" for="expected_budget">Expected Budget</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="expected_budget">₹</span>
-                        <input type="text" class="form-control" placeholder=0 aria-label="expected_budget"
-                            aria-describedby="expected_budget" name="tourspot[expected_budget]" required>
-                    </div>
-                </div>
-
-
-                <div class="mb-3">
-                    <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control" type="text" id="description" name="tourspot[description]"
-                        required></textarea>
-                </div>
-
-                <div class="mb-3">
-                    <button class="btn btn-success">Add Tourist Spot</button>
-                </div>
-
-            </form>
-            <a href="/tourspots">All Tourist Spots</a>
-        </div>
+            <div class="mb-3">
+                <button class="btn btn-success">Add Tourist Spot</button>
+            </div>
+        </form>
+        <a href="/tourspots">All Tourist Spots</a>
     </div>
+</div>
