@@ -1,45 +1,49 @@
-const Tourspot = require("../models/tourspot");
+const Tourspot = require('../models/tourspot');
 
 module.exports.index = async (req, res) => {
     const tourspots = await Tourspot.find({});
-    res.render("tourspots/index", { tourspots });
+    res.render('tourspots/index', { tourspots });
 };
 
 module.exports.renderNewForm = (req, res) => {
-    res.render("tourspots/new");
+    res.render('tourspots/new');
 };
 
 module.exports.createTourspot = async (req, res) => {
     const tourspot = new Tourspot(req.body.tourspot);
+    tourspot.images = req.files.map((f) => ({
+        url: f.path,
+        filename: f.filename,
+    }));
     tourspot.author = req.user._id;
     await tourspot.save();
-    req.flash("success", "Successfully created new Tourist Spot!");
+    req.flash('success', 'Successfully created new Tourist Spot!');
     res.redirect(`/tourspots/${tourspot._id}`);
 };
 
 module.exports.showTourspot = async (req, res) => {
     const tourspot = await Tourspot.findById(req.params.id)
         .populate({
-            path: "reviews",
+            path: 'reviews',
             populate: {
-                path: "author",
+                path: 'author',
             },
         })
-        .populate("author");
+        .populate('author');
     if (!tourspot) {
-        req.flash("error", "Cannot find that Tourist Spot!");
-        return res.redirect("/tourspots");
+        req.flash('error', 'Cannot find that Tourist Spot!');
+        return res.redirect('/tourspots');
     }
-    res.render("tourspots/show", { tourspot });
+    res.render('tourspots/show', { tourspot });
 };
 
 module.exports.renderEditForm = async (req, res) => {
     const tourspot = await Tourspot.findById(req.params.id);
     if (!tourspot) {
-        req.flash("error", "Cannot find that Tourist Spot!");
-        return res.redirect("/tourspots");
+        req.flash('error', 'Cannot find that Tourist Spot!');
+        return res.redirect('/tourspots');
     }
-    res.render("tourspots/edit", { tourspot });
+    res.render('tourspots/edit', { tourspot });
 };
 
 module.exports.updateTourspot = async (req, res) => {
@@ -47,13 +51,19 @@ module.exports.updateTourspot = async (req, res) => {
     const tourspot = await Tourspot.findByIdAndUpdate(id, {
         ...req.body.tourspot,
     });
-    req.flash("success", "Successfully updated Tourist Spot!");
+    const images = req.files.map((f) => ({
+        url: f.path,
+        filename: f.filename,
+    }));
+    tourspot.images.push(...images);
+    await tourspot.save();
+    req.flash('success', 'Successfully updated Tourist Spot!');
     res.redirect(`/tourspots/${tourspot._id}`);
 };
 
 module.exports.deleteTourspot = async (req, res) => {
     const { id } = req.params;
     await Tourspot.findByIdAndDelete(id);
-    req.flash("success", "Successfully deleted Tourist Spot!");
-    res.redirect("/tourspots");
+    req.flash('success', 'Successfully deleted Tourist Spot!');
+    res.redirect('/tourspots');
 };

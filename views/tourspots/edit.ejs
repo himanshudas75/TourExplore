@@ -1,49 +1,102 @@
 <% layout('layouts/boilerplate')%>
-    <div class="row">
-        <h1 class="text-center">Edit Tourist Spot</h1>
-        <div class="col-6 offset-3">
+<div class="row">
+    <h1 class="text-center">Edit Tourist Spot</h1>
+    <div class="col-6 offset-3">
+        <form
+            class="needs-validation"
+            action="/tourspots/<%= tourspot._id %>?_method=PUT"
+            method="POST"
+            enctype="multipart/form-data"
+            novalidate
+        >
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input
+                    class="form-control"
+                    type="text"
+                    id="title"
+                    name="tourspot[title]"
+                    value="<%= tourspot.title %>"
+                    required
+                />
+            </div>
 
-            <form class="needs-validation" action="/tourspots/<%= tourspot._id %>?_method=PUT" method="POST" novalidate>
-                <div class="mb-3">
-                    <label class="form-label" for="title">Title</label>
-                    <input class="form-control" type="text" id="title" name="tourspot[title]"
-                        value="<%= tourspot.title %>" required>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <input
+                    class="form-control"
+                    type="text"
+                    id="location"
+                    name="tourspot[location]"
+                    value="<%= tourspot.location %>"
+                    required
+                />
+            </div>
+
+            <!-- <div class="mb-3">
+                <label for="image" class="form-label">Add Images</label>
+                <input type="file" name="tourspot[image]" id="image" multiple />
+            </div> -->
+
+            <div class="mb-3">
+                <label for="image" class="form-label">Add Images</label>
+                <input
+                    class="form-control"
+                    name="tourspot[image]"
+                    type="file"
+                    id="image"
+                    multiple
+                />
+            </div>
+
+            <!-- <div class="mb-3">
+                <label class="form-label" for="image">Image URL</label>
+                <input
+                    class="form-control"
+                    type="text"
+                    id="image"
+                    name="tourspot[image]"
+                    value="<%= tourspot.image %>"
+                    required
+                />
+            </div> -->
+
+            <div class="mb-3">
+                <label class="form-label" for="expected_budget"
+                    >Expected Budget</label
+                >
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="expected_budget">₹</span>
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="0"
+                        aria-label="expected_budget"
+                        aria-describedby="expected_budget"
+                        name="tourspot[expected_budget]"
+                        value="<%= tourspot.expected_budget %>"
+                        required
+                    />
                 </div>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="location">Location</label>
-                    <input class="form-control" type="text" id="location" name="tourspot[location]"
-                        value="<%= tourspot.location %>" required>
-                </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea
+                    class="form-control"
+                    type="text"
+                    id="description"
+                    name="tourspot[description]"
+                    required
+                >
+<%= tourspot.description %></textarea
+                >
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="image">Image URL</label>
-                    <input class="form-control" type="text" id="image" name="tourspot[image]"
-                        value="<%= tourspot.image %>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label" for="expected_budget">Expected Budget</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="expected_budget">₹</span>
-                        <input type="text" class="form-control" placeholder=0 aria-label="expected_budget"
-                            aria-describedby="expected_budget" name="tourspot[expected_budget]"
-                            value="<%= tourspot.expected_budget %>" required>
-                    </div>
-                </div>
-
-
-                <div class="mb-3">
-                    <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control" type="text" id="description" name="tourspot[description]"
-                        required><%= tourspot.description %></textarea>
-                </div>
-
-                <div class="mb-3">
-                    <button class="btn btn-info">Update Tourist Spot</button>
-                </div>
-
-            </form>
-            <a href="/tourspots/<%= tourspot._id %>">Back to Tourist Spot</a>
-        </div>
+            <div class="mb-3">
+                <button class="btn btn-info">Update Tourist Spot</button>
+            </div>
+        </form>
+        <a href="/tourspots/<%= tourspot._id %>">Back to Tourist Spot</a>
     </div>
+</div>
