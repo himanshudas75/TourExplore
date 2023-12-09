@@ -34,7 +34,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="image" class="form-label">Add Images</label>
+                <label for="image" class="form-label">Add More Images</label>
                 <input
                     class="form-control"
                     name="tourspot[image]"
@@ -72,10 +72,22 @@
                     name="tourspot[description]"
                     required
                 >
-<%= tourspot.description %></textarea
-                >
+                <%= tourspot.description %>
+                </textarea>
             </div>
 
+            <% tourspot.images.forEach((img, i) => {%>
+            <img src="<%= img.thumbnail %>" class="img-thumbnail" alt="" />
+            <div class="form-check-inline">
+                <input
+                    type="checkbox"
+                    name="deleteImages[]"
+                    id="image-<%=i%>"
+                    value="<%=img.filename%>"
+                />
+            </div>
+            <label for="image-<%=i%>">Delete?</label>
+            <% }) %>
             <div class="mb-3">
                 <button class="btn btn-info">Update Tourist Spot</button>
             </div>

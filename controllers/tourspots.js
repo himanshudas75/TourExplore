@@ -1,4 +1,5 @@
 const Tourspot = require('../models/tourspot');
+const { cloudinary } = require('../cloudinary');
 
 module.exports.index = async (req, res) => {
     const tourspots = await Tourspot.find({});
@@ -57,6 +58,14 @@ module.exports.updateTourspot = async (req, res) => {
     }));
     tourspot.images.push(...images);
     await tourspot.save();
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        await tourspot.updateOne({
+            $pull: { images: { filename: { $in: req.body.deleteImages } } },
+        });
+    }
     req.flash('success', 'Successfully updated Tourist Spot!');
     res.redirect(`/tourspots/${tourspot._id}`);
 };
