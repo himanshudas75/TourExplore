@@ -11,7 +11,6 @@ function GetMap() {
     });
 
     const location = map.getCenter();
-    console.log(location);
 
     const pin = new Microsoft.Maps.Pushpin(location, {});
     const infobox = new Microsoft.Maps.Infobox(location, {

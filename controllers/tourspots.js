@@ -19,7 +19,6 @@ module.exports.createTourspot = async (req, res) => {
     }));
     tourspot.author = req.user._id;
     tourspot.geometry = await findLocation(tourspot.location);
-    console.log(tourspot);
     await tourspot.save();
     req.flash('success', 'Successfully created new Tourist Spot!');
     res.redirect(`/tourspots/${tourspot._id}`);
