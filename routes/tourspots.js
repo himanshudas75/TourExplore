@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { storage } = require('../cloudinary');
+const { storage } = require('../utils/cloudinary');
 const upload = multer({ storage: storage });
 
 const catchAsync = require('../utils/catchAsync');

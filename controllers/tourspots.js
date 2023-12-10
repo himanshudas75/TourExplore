@@ -1,5 +1,5 @@
 const Tourspot = require('../models/tourspot');
-const { cloudinary } = require('../cloudinary');
+const { cloudinary } = require('../utils/cloudinary');
 const { findLocation } = require('../utils/findLocation');
 
 module.exports.index = async (req, res) => {
