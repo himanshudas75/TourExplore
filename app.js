@@ -6,6 +6,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const methodOverride = require('method-override');
 const morgan = require('morgan');
 const ejsMate = require('ejs-mate');
@@ -24,8 +25,11 @@ const tourspotRoutes = require('./routes/tourspots');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 
-const connection_string = process.env.MONGODB_URL;
-mongoose.connect(connection_string);
+const dbUrl = process.env.MONGODB_URL;
+const session_secret = process.env.SESSION_SECRET;
+const session_store_secret = process.env.SESSION_STORE_SECRET;
+
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -50,9 +54,20 @@ app.use(
     })
 );
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    secret: session_store_secret,
+    touchAfter: 24 * 60 * 60,
+});
+
+store.on('error', function (e) {
+    console.log('SESSION STORE ERROR', e);
+});
+
 const sessionConfig = {
+    store: store,
     name: 'session',
-    secret: process.env.SESSION_SECRET,
+    secret: session_secret,
     resave: false,
     saveUninitialized: false,
     cookie: {
