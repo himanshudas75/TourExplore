@@ -32,7 +32,7 @@ const seedDB = async () => {
                 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem quibusdam doloribus blanditiis repellat soluta nesciunt corrupti iste saepe, quaerat magnam rem quod voluptatibus commodi, perferendis ipsam officia tempora fugiat iusto.',
             images: [
                 {
-                    url: 'https://res.cloudinary.com/dmkghofuf/image/upload/v1702126131/TourExplorer/qd6i6awc0rjqp6rk3qdy.jpg',
+                    url: 'https://wallpapercave.com/wp/wp7721695.jpg',
                     filename: 'TourExplorer/qd6i6awc0rjqp6rk3qdy',
                 },
             ],

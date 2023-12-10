@@ -1,11 +1,8 @@
 function GetMap() {
-    const map = new Microsoft.Maps.Map('#indexPageMap', {
+    const map = new Microsoft.Maps.Map('#map-cluster', {
         credentials: mapToken,
-        center: new Microsoft.Maps.Location(
-            40.031829069489895,
-            -94.04153815000001
-        ),
-        zoom: 4,
+        center: new Microsoft.Maps.Location(30.390016, 17.288664),
+        zoom: 2,
         mapTypeId: Microsoft.Maps.MapTypeId.canvasLight,
     });
 

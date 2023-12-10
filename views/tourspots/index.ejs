@@ -1,15 +1,10 @@
 <% layout('layouts/boilerplate')%>
 
-<div
-    id="indexPageMap"
-    style="position: relative; width: 100%; height: 500px"
-></div>
+<div id="map-cluster" class="mb-3"></div>
 
-<h1>All Tourist Spots</h1>
-<div class="container mb-3">
-    <a class="btn btn-primary" href="/tourspots/new">Add Tourist Spot</a>
-</div>
-<ul>
+<div class="container">
+    <!-- <h1>All Tourist Spots</h1> -->
+
     <% for(let tourspot of tourspots) { %>
 
     <div class="card mb-3">
@@ -23,7 +18,7 @@
                 />
                 <% } else { %>
                 <img
-                    src="https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                    src="https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg"
                     class="img-fluid"
                     alt=""
                 />
@@ -48,8 +43,7 @@
     </div>
 
     <% } %>
-</ul>
-
+</div>
 <script>
     const mapToken = '<%-process.env.BING_API_KEY%>';
     const tourspots = <%- JSON.stringify(tourspots) %>;

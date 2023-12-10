@@ -2,10 +2,6 @@
 <link rel="stylesheet" href="/css/stars.css" />
 
 <div class="row">
-    <div
-        id="myMap"
-        style="position: relative; width: 600px; height: 400px"
-    ></div>
     <div class="col-6">
         <div id="tourspotCarousel" class="carousel slide">
             <div class="carousel-inner">
@@ -84,6 +80,7 @@
         </div>
     </div>
     <div class="col-6">
+        <div id="map"></div>
         <!-- Show this form only for signed in users -->
         <% if (currentUser) { %>
         <h2>Leave a Review</h2>
