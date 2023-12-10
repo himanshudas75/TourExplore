@@ -19,7 +19,7 @@ db.once('open', () => {
 const sample = (array) => Math.floor(Math.random() * array.length);
 const seedDB = async () => {
     await Tourspot.deleteMany({});
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 200; i++) {
         const random_index = sample(cities);
         const expected_budget = Math.floor(Math.random() * 20) + 10;
         const tourspot = new Tourspot({
@@ -35,15 +35,14 @@ const seedDB = async () => {
                     url: 'https://res.cloudinary.com/dmkghofuf/image/upload/v1702126131/TourExplorer/qd6i6awc0rjqp6rk3qdy.jpg',
                     filename: 'TourExplorer/qd6i6awc0rjqp6rk3qdy',
                 },
-                // {
-                //     url: 'https://res.cloudinary.com/dmkghofuf/image/upload/v1702121838/TourExplore/s85jjar2ttqdaxh3snet.png',
-                //     filename: 'TourExplore/s85jjar2ttqdaxh3snet',
-                // },
             ],
             expected_budget: expected_budget,
             geometry: {
                 type: 'Point',
-                coordinates: [47.60322952, -122.33027649],
+                coordinates: [
+                    cities[random_index].latitude,
+                    cities[random_index].longitude,
+                ],
             },
         });
         await tourspot.save();
