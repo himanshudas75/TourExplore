@@ -25,17 +25,17 @@ function HomeAppBar() {
 
     return (
         <AppBar className="home-app-bar" position="static">
-            <Container maxWidth="xl">
+            <Container maxWidth="x1">
                 <Toolbar disableGutters>
                     <Typography
-                        variant="h6"
+                        variant="h5"
                         noWrap
                         component="a"
                         href="#app-bar-with-responsive-menu"
                         sx={{
                             mr: 2,
                             display: { xs: 'none', md: 'flex' },
-                            fontWeight: 600,
+                            fontWeight: 500,
                             letterSpacing: '.1rem',
                             color: 'inherit',
                             textDecoration: 'none',
@@ -53,7 +53,7 @@ function HomeAppBar() {
                             mr: 2,
                             display: { xs: 'flex', md: 'none' },
                             flexGrow: 1,
-                            fontWeight: 600,
+                            fontWeight: 500,
                             letterSpacing: '.1rem',
                             color: 'inherit',
                             textDecoration: 'none',
