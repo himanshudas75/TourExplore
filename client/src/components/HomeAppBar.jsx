@@ -10,9 +10,17 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 
+import { v4 as uuid } from 'uuid';
+
 import '../stylesheets/HomeAppBar.css';
 
-function HomeAppBar() {
+function HomeAppBar({ nav }) {
+    const pages = [
+        { name: 'Home', link: nav.home, active: true },
+        { name: 'Tourist Spots', link: nav.index },
+        { name: 'New Tourist Spot', link: nav.index },
+    ];
+
     const [anchorElNav, setAnchorElNav] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
@@ -24,14 +32,13 @@ function HomeAppBar() {
     };
 
     return (
-        <AppBar className="home-app-bar" position="static">
+        <AppBar className="homeAppBar" position="static">
             <Container maxWidth="x1">
                 <Toolbar disableGutters>
                     <Typography
                         variant="h5"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
                         sx={{
                             mr: 2,
                             display: { xs: 'none', md: 'flex' },
@@ -48,7 +55,6 @@ function HomeAppBar() {
                         variant="h5"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
                         sx={{
                             mr: 2,
                             display: { xs: 'flex', md: 'none' },
@@ -98,29 +104,13 @@ function HomeAppBar() {
                                 justifyContent: 'flex-end',
                             }}
                         >
-                            <MenuItem key="1" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">Home</Typography>
-                            </MenuItem>
-                            <MenuItem key="1" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">
-                                    Tourist Spots
-                                </Typography>
-                            </MenuItem>
-                            <MenuItem key="1" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">
-                                    Login
-                                </Typography>
-                            </MenuItem>
-                            <MenuItem key="1" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">
-                                    Register
-                                </Typography>
-                            </MenuItem>
-                            <MenuItem key="1" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">
-                                    Logout
-                                </Typography>
-                            </MenuItem>
+                            {pages.map((page) => (
+                                <MenuItem key={page.name} onClick={page.link}>
+                                    <Typography textAlign="center">
+                                        {page.name}
+                                    </Typography>
+                                </MenuItem>
+                            ))}
                         </Menu>
                     </Box>
 
@@ -132,71 +122,24 @@ function HomeAppBar() {
                             justifyContent: 'flex-end',
                         }}
                     >
-                        <Button
-                            key="1"
-                            onClick={handleCloseNavMenu}
-                            sx={{ my: 2, display: 'block' }}
-                            disableRipple
-                        >
-                            <Typography
-                                className="button-text active"
-                                textAlign="center"
+                        {pages.map((page) => (
+                            <Button
+                                variant="text"
+                                key={page.name}
+                                onClick={page.link}
+                                sx={{ my: 2, display: 'block' }}
+                                disableRipple
                             >
-                                Home
-                            </Typography>
-                        </Button>
-                        <Button
-                            key="1"
-                            onClick={handleCloseNavMenu}
-                            sx={{ my: 2, display: 'block' }}
-                            disableRipple
-                        >
-                            <Typography
-                                className="button-text"
-                                textAlign="center"
-                            >
-                                Tourist Spots
-                            </Typography>
-                        </Button>
-                        <Button
-                            key="1"
-                            onClick={handleCloseNavMenu}
-                            sx={{ my: 2, display: 'block' }}
-                            disableRipple
-                        >
-                            <Typography
-                                className="button-text"
-                                textAlign="center"
-                            >
-                                Login
-                            </Typography>
-                        </Button>
-                        <Button
-                            key="1"
-                            onClick={handleCloseNavMenu}
-                            sx={{ my: 2, display: 'block' }}
-                            disableRipple
-                        >
-                            <Typography
-                                className="button-text"
-                                textAlign="center"
-                            >
-                                Register
-                            </Typography>
-                        </Button>
-                        <Button
-                            key="1"
-                            onClick={handleCloseNavMenu}
-                            sx={{ my: 2, display: 'block' }}
-                            disableRipple
-                        >
-                            <Typography
-                                className="button-text"
-                                textAlign="center"
-                            >
-                                Logout
-                            </Typography>
-                        </Button>
+                                <Typography
+                                    className={`button-text ${
+                                        page.active ? 'active' : ''
+                                    }`}
+                                    textAlign="center"
+                                >
+                                    {page.name}
+                                </Typography>
+                            </Button>
+                        ))}
                     </Box>
                 </Toolbar>
             </Container>
