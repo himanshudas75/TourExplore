@@ -3,6 +3,13 @@ const ExpressError = require('./utils/ExpressError');
 const passport = require('passport');
 
 const Tourspot = require('./models/tourspot');
+const Review = require('./models/review');
+
+const validateMongoId = (id) => {
+    if (id.length !== 24) return false;
+    const hexRegex = /^[0-9A-Fa-f]+$/;
+    return hexRegex.test(id);
+};
 
 module.exports.isAuthenticated = (req, res, next) => {
     passport.authenticate('jwt', { session: false }, (err, user) => {
@@ -32,41 +39,48 @@ module.exports.isTourspotAuthor = async (req, res, next) => {
     next();
 };
 
-// module.exports.isLoggedIn = (req, res, next) => {
-//     if (!req.isAuthenticated()) {
-//         req.session.returnTo = req.originalUrl;
-//         req.flash('error', 'You must be signed in to access this page!');
-//         return res.redirect('/login');
-//     }
-//     next();
-// };
+module.exports.isReviewAuthor = async (req, res, next) => {
+    const { reviewId } = req.params;
+    const review = await Review.findById(reviewId);
 
-// module.exports.storeReturnTo = (req, res, next) => {
-//     if (req.session.returnTo) {
-//         res.locals.returnTo = req.session.returnTo;
-//     }
-//     next();
-// };
+    if (!review.author.equals(req.user._id)) {
+        const error = {
+            statusCode: 401,
+            message: 'Unauthorized',
+        };
+        return next(error);
+    }
+    next();
+};
 
-// module.exports.isAuthor = async (req, res, next) => {
-//     const { id } = req.params;
-//     const tourspot = await Tourspot.findById(id);
-//     if (!tourspot.author.equals(req.user._id)) {
-//         req.flash('error', 'You do not have the permission to do that');
-//         return res.redirect(`/tourspots/${id}`);
-//     }
-//     next();
-// };
+module.exports.isTourspot = async (req, res, next) => {
+    const error = {
+        statusCode: 404,
+        message: 'Tourspot not found',
+    };
+    const { tourspotId } = req.params;
+    if (!validateMongoId(tourspotId)) return next(error);
+    const tourspot = await Tourspot.findById(tourspotId);
 
-// module.exports.isReviewAuthor = async (req, res, next) => {
-//     const { id, reviewId } = req.params;
-//     const review = await Review.findById(reviewId);
-//     if (!review.author.equals(req.user._id)) {
-//         req.flash('error', 'You do not have the permission to do that');
-//         return res.redirect(`/tourspots/${id}`);
-//     }
-//     next();
-// };
+    if (!tourspot) {
+        return next(error);
+    }
+    next();
+};
+
+module.exports.isReview = async (req, res, next) => {
+    const error = {
+        statusCode: 404,
+        message: 'Review not found',
+    };
+    const { tourspotId, reviewId } = req.params;
+    if (!validateMongoId(reviewId)) return next(error);
+    const review = await Review.findById(reviewId);
+    if (!review || review.tourspot.toString() !== tourspotId) {
+        return next(error);
+    }
+    next();
+};
 
 module.exports.validateUser = (req, res, next) => {
     const { error } = userSchema.validate(req.body);

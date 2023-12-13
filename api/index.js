@@ -8,7 +8,6 @@ const cors = require('cors');
 
 const passport = require('./utils/passport');
 
-// ENV vars
 const dbUrl = process.env.MONGODB_URL;
 
 mongoose.connect(dbUrl);
@@ -36,14 +35,14 @@ app.use(express.json());
 app.use(passport.initialize());
 
 const tourspotRoutes = require('./routes/tourspots');
-// const reviewRoutes = require('./routes/reviews');
+const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 const { error } = require('console');
 
 // Routes
 app.use('/api/', userRoutes);
 app.use('/api/tourspots', tourspotRoutes);
-// app.use('/api/tourspots/:id/reviews', reviewRoutes);
+app.use('/api/tourspots/:tourspotId/reviews', reviewRoutes);
 
 app.use((err, req, res, next) => {
     if (!err.statusCode) err.statusCode = 500;

@@ -11,9 +11,10 @@ const {
     validateTourspot,
     isAuthenticated,
     isTourspotAuthor,
+    isTourspot,
 } = require('../middleware');
 
-router.get('/', tourspots.index);
+router.get('/', catchAsync(tourspots.index));
 
 router
     .route('/new')
@@ -26,14 +27,20 @@ router
 
 router
     .route('/:tourspotId/')
-    .get(tourspots.showTourspot)
+    .get(isTourspot, catchAsync(tourspots.showTourspot))
     .put(
         isAuthenticated,
+        isTourspot,
         isTourspotAuthor,
         upload.array('tourspot[image]'),
         validateTourspot,
         catchAsync(tourspots.updateTourspot)
+    )
+    .delete(
+        isAuthenticated,
+        isTourspot,
+        isTourspotAuthor,
+        catchAsync(tourspots.deleteTourspot)
     );
-//     .delete(isLoggedIn, isAuthor, catchAsync(tourspots.deleteTourspot));
 
 module.exports = router;
