@@ -1,12 +1,20 @@
-const { ExtractJwt } = require('passport-jwt');
 const User = require('../models/user');
 const { hashSync, compareSync } = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { urlencoded } = require('express');
 
-// module.exports.renderRegisterForm = (req, res) => {
-//     res.render('users/register');
-// };
+const generateToken = (user) => {
+    const payload = {
+        user_id: user._id,
+        username: user.username,
+    };
+
+    const options = {
+        expiresIn: '1d',
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, options);
+    return token;
+};
 
 module.exports.register = async (req, res, next) => {
     const { username, email, password } = req.body;
@@ -17,6 +25,7 @@ module.exports.register = async (req, res, next) => {
     });
 
     const savedUser = await user.save();
+    const token = generateToken(user);
 
     res.json({
         success: true,
@@ -25,12 +34,9 @@ module.exports.register = async (req, res, next) => {
             user_id: savedUser._id,
             username: savedUser.username,
         },
+        token: 'Bearer ' + token,
     });
 };
-
-// module.exports.renderLoginForm = (req, res) => {
-//     res.render('users/login');
-// };
 
 module.exports.login = async (req, res, next) => {
     console.log(req.body);
@@ -44,16 +50,8 @@ module.exports.login = async (req, res, next) => {
         });
     }
 
-    const payload = {
-        user_id: user._id,
-        username: user.username,
-    };
+    const token = generateToken(user);
 
-    const options = {
-        expiresIn: '1d',
-    };
-
-    const token = jwt.sign(payload, process.env.JWT_SECRET, options);
     res.json({
         success: true,
         message: 'Logged in successfully',
@@ -71,10 +69,3 @@ module.exports.verify = (req, res) => {
         },
     });
 };
-// module.exports.logout = (req, res, next) => {
-//     req.logout((err) => {
-//         if (err) return next(err);
-//         req.flash('success', 'Logged out successfully');
-//         res.redirect('/tourspots');
-//     });
-// };

@@ -1,5 +1,36 @@
 const { tourspotSchema, reviewSchema, userSchema } = require('./schemas');
 const ExpressError = require('./utils/ExpressError');
+const passport = require('passport');
+
+const Tourspot = require('./models/tourspot');
+
+module.exports.isAuthenticated = (req, res, next) => {
+    passport.authenticate('jwt', { session: false }, (err, user) => {
+        if (err || !user) {
+            const error = {
+                statusCode: 401,
+                message: 'Unauthorized',
+            };
+            return next(error);
+        }
+
+        req.user = user;
+        next();
+    })(req, res, next);
+};
+
+module.exports.isTourspotAuthor = async (req, res, next) => {
+    const { tourspotId } = req.params;
+    const tourspot = await Tourspot.findById(tourspotId);
+    if (!tourspot.author.equals(req.user._id)) {
+        const error = {
+            statusCode: 401,
+            message: 'Unauthorized',
+        };
+        return next(error);
+    }
+    next();
+};
 
 // module.exports.isLoggedIn = (req, res, next) => {
 //     if (!req.isAuthenticated()) {
