@@ -9,7 +9,7 @@ function Layout({ nav }) {
     return (
         <div className="layout">
             <Header nav={nav} />
-            <main>
+            <main className="mt-4 me-4 ms-4">
                 <Outlet />
             </main>
             <Footer />

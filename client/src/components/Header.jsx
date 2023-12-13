@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,6 +17,8 @@ import '../stylesheets/Header.css';
 import { v4 as uuid } from 'uuid';
 
 function Header({ nav }) {
+    const navigate = useNavigate();
+
     const pages = [
         { name: 'Home', link: nav.home },
         { name: 'Tourist Spots', link: nav.index },
@@ -58,7 +62,7 @@ function Header({ nav }) {
                             <Button
                                 variant="text"
                                 key={page.name}
-                                onClick={page.link}
+                                onClick={() => navigate(page.link)}
                                 sx={{ my: 2, display: 'block' }}
                             >
                                 {page.name}
@@ -80,7 +84,7 @@ function Header({ nav }) {
                             <Button
                                 variant="text"
                                 key={action.name}
-                                onClick={action.link}
+                                onClick={() => navigate(action.link)}
                                 sx={{ my: 2, display: 'block' }}
                             >
                                 {action.name}

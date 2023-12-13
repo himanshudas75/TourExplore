@@ -1,4 +1,6 @@
-import * as React from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,13 +17,15 @@ import { v4 as uuid } from 'uuid';
 import '../stylesheets/HomeAppBar.css';
 
 function HomeAppBar({ nav }) {
+    const navigate = useNavigate();
+
     const pages = [
         { name: 'Home', link: nav.home, active: true },
         { name: 'Tourist Spots', link: nav.index },
         { name: 'New Tourist Spot', link: nav.index },
     ];
 
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [anchorElNav, setAnchorElNav] = useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -105,7 +109,10 @@ function HomeAppBar({ nav }) {
                             }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page.name} onClick={page.link}>
+                                <MenuItem
+                                    key={page.name}
+                                    onClick={() => navigate(page.link)}
+                                >
                                     <Typography textAlign="center">
                                         {page.name}
                                     </Typography>
@@ -126,7 +133,7 @@ function HomeAppBar({ nav }) {
                             <Button
                                 variant="text"
                                 key={page.name}
-                                onClick={page.link}
+                                onClick={() => navigate(page.link)}
                                 sx={{ my: 2, display: 'block' }}
                                 disableRipple
                             >

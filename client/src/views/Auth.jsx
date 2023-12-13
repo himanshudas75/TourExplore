@@ -4,10 +4,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 
+// import { useParams } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 
 function Auth({ action }) {
+    // const a = useParams();
+    // console.log(a);
     return (
         <div className="container justify-content-center align-items-center mt-5 mb-5">
             <div className="row">
@@ -19,8 +22,8 @@ function Auth({ action }) {
                             component="img"
                         />
                         <CardContent>
-                            {action === 'login' ? <LoginForm /> : ''}
-                            {action === 'register' ? <RegisterForm /> : ''}
+                            {action === 'login' && <LoginForm />}
+                            {action === 'register' && <RegisterForm />}
                         </CardContent>
                     </Card>
                 </div>
