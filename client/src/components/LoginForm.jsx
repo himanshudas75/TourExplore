@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 
 import '../stylesheets/LoginForm.css';
 
@@ -24,7 +25,25 @@ function LoginForm() {
         password: '',
     };
 
-    function onSubmit(e) {
+    async function getTourspots() {
+        await axios.get('/tourspots').then((res) => {
+            setTourspots(res.data);
+        });
+    }
+
+    async function onSubmit(e) {
+        const data = {
+            username: e.username,
+            password: e.password,
+        };
+        await axios
+            .post('/login', data)
+            .then((res) => {
+                localStorage.setItem('token', res.data.token);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
         console.log(e);
     }
 

@@ -9,6 +9,7 @@ import IndexPage from './views/IndexPage.jsx';
 import Layout from './Layout.jsx';
 import Auth from './views/Auth.jsx';
 import ShowTourspotPage from './views/ShowTourspotPage.jsx';
+import NewTourspot from './views/NewTourspot.jsx';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
@@ -20,17 +21,22 @@ function App() {
         login: '/login',
         register: '/register',
         logout: '/logout',
+        new: '/tourspots/new',
     };
 
     return (
         <Routes>
             <Route index element={<Home nav={nav} />} />
             <Route path="/" element={<Layout nav={nav} />}>
-                <Route path="/tourspots" element={<IndexPage nav={nav} />} />
-                <Route
-                    path="/tourspots/:tourspotId"
-                    element={<ShowTourspotPage />}
-                />
+                <Route path="/tourspots">
+                    <Route index element={<IndexPage nav={nav} />} />
+                    <Route
+                        path="/tourspots/:tourspotId"
+                        element={<ShowTourspotPage />}
+                    />
+                    <Route path="/tourspots/new" element={<NewTourspot />} />
+                </Route>
+
                 <Route path="/login" element={<Auth action="login" />} />
                 <Route path="/register" element={<Auth action="register" />} />
             </Route>

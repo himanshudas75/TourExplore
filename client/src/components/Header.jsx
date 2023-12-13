@@ -22,7 +22,7 @@ function Header({ nav }) {
     const pages = [
         { name: 'Home', link: nav.home },
         { name: 'Tourist Spots', link: nav.index },
-        { name: 'New Tourist Spot', link: nav.index },
+        { name: 'New Tourist Spot', link: nav.new },
     ];
 
     const actions = [

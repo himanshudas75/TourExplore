@@ -22,7 +22,9 @@ function HomeAppBar({ nav }) {
     const pages = [
         { name: 'Home', link: nav.home, active: true },
         { name: 'Tourist Spots', link: nav.index },
-        { name: 'New Tourist Spot', link: nav.index },
+        { name: 'Login', link: nav.login },
+        { name: 'Register', link: nav.register },
+        { name: 'Logout', link: nav.logout },
     ];
 
     const [anchorElNav, setAnchorElNav] = useState(null);
