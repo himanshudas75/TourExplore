@@ -15,9 +15,11 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import '../stylesheets/Header.css';
 
 import { v4 as uuid } from 'uuid';
+import useData from '../hooks/useData.js';
 
-function Header({ nav }) {
+function Header() {
     const navigate = useNavigate();
+    const { nav } = useData();
 
     const pages = [
         { name: 'Home', link: nav.home },

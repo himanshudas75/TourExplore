@@ -5,10 +5,14 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 
 const passport = require('./utils/passport');
 
 const dbUrl = process.env.MONGODB_URL;
+const port = process.env.PORT || 3000;
 
 mongoose.connect(dbUrl);
 const db = mongoose.connection;
@@ -29,15 +33,69 @@ app.use(
         origin: ['http://127.0.0.1:5173', 'http://localhost:5173'],
     })
 );
+
+app.set('trust proxy', 1);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
+app.use(
+    mongoSanitize({
+        replaceWith: '_',
+    })
+);
+
+app.use(helmet());
+const scriptSrcUrls = [
+    'https://stackpath.bootstrapcdn.com/',
+    'http://www.bing.com',
+    'http://r.bing.com',
+    'https://kit.fontawesome.com/',
+    'https://cdnjs.cloudflare.com/',
+    'https://cdn.jsdelivr.net',
+    'https://dev.virtualearth.net',
+];
+const styleSrcUrls = [
+    'https://cdn.jsdelivr.net',
+    'http://r.bing.com',
+    'https://kit-free.fontawesome.com/',
+    'https://stackpath.bootstrapcdn.com/',
+    'https://fonts.googleapis.com/',
+    'https://use.fontawesome.com/',
+];
+const connectSrcUrls = [
+    'http://www.bing.com',
+    'https://t.ssl.ak.tiles.virtualearth.net',
+];
+const fontSrcUrls = [];
+const imgSrcUrls = [
+    `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`,
+    'https://images.unsplash.com/',
+    'https://wallpapercave.com/',
+    'https://images.pexels.com/',
+    'https://t.ssl.ak.dynamic.tiles.virtualearth.net',
+    'http://r.bing.com',
+];
+
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", 'blob:'],
+            objectSrc: [],
+            imgSrc: ["'self'", 'blob:', 'data:', ...imgSrcUrls],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
 
 app.use(passport.initialize());
 
 const tourspotRoutes = require('./routes/tourspots');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
-const { error } = require('console');
 
 // Routes
 app.use('/api/', userRoutes);
@@ -53,6 +111,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(4000, () => {
-    console.log('Serving on port 3000');
+app.listen(port, () => {
+    console.log(`Serving on port ${port}`);
 });

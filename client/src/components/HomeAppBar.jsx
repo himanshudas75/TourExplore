@@ -15,9 +15,11 @@ import MenuItem from '@mui/material/MenuItem';
 import { v4 as uuid } from 'uuid';
 
 import '../stylesheets/HomeAppBar.css';
+import useData from '../hooks/useData.js';
 
-function HomeAppBar({ nav }) {
+function HomeAppBar() {
     const navigate = useNavigate();
+    const { nav } = useData();
 
     const pages = [
         { name: 'Home', link: nav.home, active: true },

@@ -11,9 +11,12 @@ import ListItemText from '@mui/material/ListItemText';
 
 import ImageCarousel from './ImageCarousel';
 import { colors } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function ShowTourspotPageCard({ tourspot }) {
+    const navigate = useNavigate();
     const img_urls = tourspot.images.map((img) => img.url);
+
     return (
         <Card elevation={3} className="mb-4">
             <div className="row">
@@ -55,7 +58,13 @@ function ShowTourspotPageCard({ tourspot }) {
                         <Divider component="li" />
                     </List>
                     <CardActions className="mb-2 ms-2">
-                        <Button variant="contained" className="me-2">
+                        <Button
+                            variant="contained"
+                            onClick={() =>
+                                navigate(`/tourspots/${tourspot._id}/edit`)
+                            }
+                            className="me-2"
+                        >
                             Edit
                         </Button>
                         <Button variant="contained" color="error">

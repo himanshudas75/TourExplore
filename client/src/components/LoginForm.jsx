@@ -2,49 +2,64 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
+import { useState, useRef, useEffect, useContext } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Formik, Form } from 'formik';
+
 import axios from 'axios';
 
 import '../stylesheets/LoginForm.css';
 
-const loginSchema = Yup.object().shape({
-    username: Yup.string()
-        .min(2, 'Username must be greater than 2 characters')
-        .max(50, 'Username must be less than 50 characters')
-        .required('Username must not be empty'),
-    password: Yup.string()
-        .min(2, 'Password must be greater than 8 characters')
-        .required('Password must not be empty'),
-});
+import { loginSchema } from '../schemas.js';
+import { useSnackbar } from 'notistack';
+import useAuth from '../hooks/useAuth.js';
 
 function LoginForm() {
+    const { setAuth } = useAuth();
+    const userRef = useRef();
+    useEffect(() => {
+        userRef.current.focus();
+    }, []);
+    const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
+
     const initialValues = {
         username: '',
         password: '',
     };
-
-    async function getTourspots() {
-        await axios.get('/tourspots').then((res) => {
-            setTourspots(res.data);
-        });
-    }
 
     async function onSubmit(e) {
         const data = {
             username: e.username,
             password: e.password,
         };
-        await axios
-            .post('/login', data)
-            .then((res) => {
-                localStorage.setItem('token', res.data.token);
-            })
-            .catch((err) => {
-                console.log(err);
+
+        try {
+            const res = await axios.post('/login', JSON.stringify(data), {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true,
             });
-        console.log(e);
+
+            const accessToken = res.data.accessToken;
+            const user_id = res.data.user.user_id;
+            const username = e.username;
+            const password = e.password;
+
+            setAuth({ user_id, username, password, accessToken });
+            enqueueSnackbar(res.data.message, {
+                variant: 'success',
+            });
+
+            navigate(from, { replace: true });
+        } catch (err) {
+            var message;
+            if (!err?.response) {
+                message = 'No response from server';
+            } else message = err.response.data.message;
+            enqueueSnackbar(message, { variant: 'error' });
+        }
     }
 
     return (
@@ -65,6 +80,7 @@ function LoginForm() {
                                 label="Username"
                                 variant="outlined"
                                 size="small"
+                                inputRef={userRef}
                                 onChange={handleChange}
                                 error={
                                     touched.username && Boolean(errors.username)

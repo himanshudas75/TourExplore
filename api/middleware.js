@@ -12,7 +12,22 @@ const validateMongoId = (id) => {
 };
 
 module.exports.isAuthenticated = (req, res, next) => {
-    passport.authenticate('jwt', { session: false }, (err, user) => {
+    passport.authenticate('access', { session: false }, (err, user) => {
+        if (err || !user) {
+            const error = {
+                statusCode: 401,
+                message: 'Unauthorized',
+            };
+            return next(error);
+        }
+
+        req.user = user;
+        next();
+    })(req, res, next);
+};
+
+module.exports.isRefreshAuthenticated = (req, res, next) => {
+    passport.authenticate('refresh', { session: false }, (err, user) => {
         if (err || !user) {
             const error = {
                 statusCode: 401,

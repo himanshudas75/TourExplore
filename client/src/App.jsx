@@ -10,35 +10,59 @@ import Layout from './Layout.jsx';
 import Auth from './views/Auth.jsx';
 import ShowTourspotPage from './views/ShowTourspotPage.jsx';
 import NewTourspot from './views/NewTourspot.jsx';
+import RequireAuth from './components/RequireAuth.jsx';
+import Logout from './components/Logout.jsx';
+import EditTourspot from './views/EditTourspot.jsx';
+
+import useData from './hooks/useData.js';
+import { useEffect } from 'react';
+import { useSnackbar } from 'notistack';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 function App() {
-    const nav = {
-        home: '/',
-        index: '/tourspots',
-        login: '/login',
-        register: '/register',
-        logout: '/logout',
-        new: '/tourspots/new',
-    };
+    const { setTourspots } = useData();
+    const { enqueueSnackbar } = useSnackbar();
+
+    useEffect(() => {
+        async function getTourspots() {
+            try {
+                const res = await axios.get('/tourspots');
+                setTourspots(res.data);
+                navigate(from, { replace: true });
+            } catch (err) {
+                var message;
+                if (!err?.response) {
+                    message = 'No response from server';
+                } else message = err.response.data.message;
+                enqueueSnackbar(message, { variant: 'error' });
+            }
+        }
+        getTourspots();
+    }, []);
 
     return (
         <Routes>
-            <Route index element={<Home nav={nav} />} />
-            <Route path="/" element={<Layout nav={nav} />}>
-                <Route path="/tourspots">
-                    <Route index element={<IndexPage nav={nav} />} />
-                    <Route
-                        path="/tourspots/:tourspotId"
-                        element={<ShowTourspotPage />}
-                    />
-                    <Route path="/tourspots/new" element={<NewTourspot />} />
-                </Route>
-
+            <Route index element={<Home />} />
+            <Route path="/" element={<Layout />}>
                 <Route path="/login" element={<Auth action="login" />} />
                 <Route path="/register" element={<Auth action="register" />} />
+                <Route path="/logout" element={<Logout />} />
+
+                <Route path="tourspots">
+                    <Route index element={<IndexPage />} />
+                    <Route path=":tourspotId" element={<ShowTourspotPage />} />
+                    <Route element={<RequireAuth />}>
+                        <Route path="new" element={<NewTourspot />} />
+                    </Route>
+                    <Route element={<RequireAuth checkTAuthor={true} />}>
+                        <Route
+                            path=":tourspotId/edit"
+                            element={<EditTourspot />}
+                        />
+                    </Route>
+                </Route>
             </Route>
         </Routes>
     );

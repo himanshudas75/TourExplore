@@ -2,32 +2,49 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
+import { useSnackbar } from 'notistack';
 
-const registerSchema = Yup.object().shape({
-    username: Yup.string()
-        .min(2, 'Username must be greater than 2 characters')
-        .max(50, 'Username must be less than 50 characters')
-        .required('Username must not be empty'),
-    email: Yup.string()
-        .email('Invalid email')
-        .required('Email must not be empty'),
-    password: Yup.string()
-        .min(2, 'Password must be greater than 8 characters')
-        .required('Password must not be empty'),
-});
+import { registerSchema } from '../schemas.js';
 
 function RegisterForm() {
+    const userRef = useRef();
+
+    useEffect(() => {
+        userRef.current.focus();
+    }, []);
+    const { enqueueSnackbar } = useSnackbar();
+
     const initialValues = {
         username: '',
         email: '',
         password: '',
     };
 
-    function onSubmit(e) {
-        console.log(e);
+    async function onSubmit(e) {
+        const data = {
+            username: e.username,
+            email: e.email,
+            password: e.password,
+        };
+
+        try {
+            const res = await axios.post('/register', JSON.stringify(data), {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true,
+            });
+            enqueueSnackbar('User registered successfully!', {
+                variant: 'success',
+            });
+        } catch (err) {
+            var message;
+            if (!err?.response) {
+                message = 'No response from server';
+            } else message = err.response.data.message;
+            enqueueSnackbar(message, { variant: 'error' });
+        }
     }
 
     return (
@@ -45,6 +62,7 @@ function RegisterForm() {
                         <div className="mb-3">
                             <TextField
                                 id="username"
+                                inputRef={userRef}
                                 label="Username"
                                 variant="outlined"
                                 size="small"

@@ -7,7 +7,10 @@ import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 
-function IndexPageCard({ tourspot, nav }) {
+import useData from '../hooks/useData.js';
+
+function IndexPageCard({ tourspot }) {
+    const { nav } = useData();
     const navigate = useNavigate();
 
     return (

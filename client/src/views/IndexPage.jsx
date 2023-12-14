@@ -4,18 +4,10 @@ import axios from 'axios';
 
 import Map from '../components/Map';
 import IndexPageCard from '../components/IndexPageCard';
+import useData from '../hooks/useData.js';
 
-function IndexPage({ nav }) {
-    const [tourspots, setTourspots] = useState([]);
-
-    useEffect(() => {
-        async function getTourspots() {
-            await axios.get('/tourspots').then((res) => {
-                setTourspots(res.data);
-            });
-        }
-        getTourspots();
-    }, []);
+function IndexPage() {
+    const { tourspots } = useData();
 
     return (
         <>
@@ -23,14 +15,13 @@ function IndexPage({ nav }) {
                 <Map tourspots={tourspots} scriptName="clusterMap.js" />
             </div>
             <div className="container">
-                {tourspots.length &&
+                {tourspots.length ? (
                     tourspots.map((tourspot) => (
-                        <IndexPageCard
-                            key={tourspot._id}
-                            tourspot={tourspot}
-                            nav={nav}
-                        />
-                    ))}
+                        <IndexPageCard key={tourspot._id} tourspot={tourspot} />
+                    ))
+                ) : (
+                    <></>
+                )}
             </div>
         </>
     );

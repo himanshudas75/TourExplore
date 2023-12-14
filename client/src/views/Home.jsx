@@ -5,12 +5,17 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import '../stylesheets/Home.css';
 
-function Home({ nav }) {
+import useData from '../hooks/useData.js';
+
+function Home() {
+    const navigate = useNavigate();
+    const { nav } = useData();
+
     return (
         <div className="homeDiv d-flex text-center">
             <div className="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
                 <header className="mb-auto">
-                    <HomeAppBar nav={nav} />
+                    <HomeAppBar />
                 </header>
                 <main className="body-text px-3">
                     <h1>TourExplore</h1>
@@ -23,7 +28,7 @@ function Home({ nav }) {
                         before!
                     </p>
                     <Button
-                        onClick={nav.index}
+                        onClick={() => navigate(nav.index)}
                         // href="/tourspots"
                         variant="contained"
                         className="bg-white"
