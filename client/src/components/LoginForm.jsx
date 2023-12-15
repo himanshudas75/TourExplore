@@ -13,9 +13,12 @@ import '../stylesheets/LoginForm.css';
 import { loginSchema } from '../schemas.js';
 import { useSnackbar } from 'notistack';
 import useAuth from '../hooks/useAuth.js';
+import useData from '../hooks/useData.js';
 
 function LoginForm() {
     const { setAuth } = useAuth();
+    const { nav } = useData();
+
     const userRef = useRef();
     useEffect(() => {
         userRef.current.focus();
@@ -23,7 +26,7 @@ function LoginForm() {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || '/';
+    const from = location.state?.from?.pathname || nav.home;
 
     const initialValues = {
         username: '',
@@ -44,10 +47,10 @@ function LoginForm() {
 
             const accessToken = res.data.accessToken;
             const user_id = res.data.user.user_id;
-            const username = e.username;
+            const username = res.data.user.username;
 
             setAuth({ user_id, username, accessToken });
-            enqueueSnackbar(res.data.message, {
+            enqueueSnackbar('Logged in successfully!', {
                 variant: 'success',
             });
 

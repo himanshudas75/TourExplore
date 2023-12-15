@@ -14,6 +14,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 
+import LogoutDialog from './LogoutDialog.jsx';
+import ChangePasswordDialog from './ChangePasswordDialog.jsx';
+import UserSettings from './UserSettings.jsx';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import '../stylesheets/Header.css';
@@ -38,27 +41,14 @@ function Header() {
         { name: 'Register', link: nav.register },
     ];
 
-    const settings = [
-        { name: 'Change Password', link: '/change' },
-        { name: 'Logout', link: nav.logout },
-    ];
-
     const [anchorElNav, setAnchorElNav] = useState(null);
-    const [anchorElUser, setAnchorElUser] = useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
-    const handleOpenUserMenu = (event) => {
-        setAnchorElUser(event.currentTarget);
-    };
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
-    };
-
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
     };
 
     return (
@@ -179,47 +169,7 @@ function Header() {
                     </Box>
 
                     {auth?.user_id ? (
-                        <Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title="Open settings">
-                                <IconButton
-                                    onClick={handleOpenUserMenu}
-                                    className="mb-1 ms-3"
-                                >
-                                    <Avatar
-                                        alt="Avatar"
-                                        src="/src/assets/avatar.png"
-                                    />
-                                    {/* <AccountCircle /> */}
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-                                {settings.map((setting) => (
-                                    <MenuItem
-                                        key={setting.name}
-                                        onClick={() => navigate(setting.link)}
-                                    >
-                                        <Typography textAlign="center">
-                                            {setting.name}
-                                        </Typography>
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </Box>
+                        <UserSettings />
                     ) : (
                         <Box
                             sx={{

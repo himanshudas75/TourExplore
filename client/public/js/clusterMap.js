@@ -1,13 +1,13 @@
-function GetMap() {
+function GetClusterMap(mapToken, tourspots, div_id) {
     const center = new Microsoft.Maps.Location(30.390016, 17.288664);
-    const map = new Microsoft.Maps.Map('#map-cluster', {
+    const map = new Microsoft.Maps.Map(`#${div_id}`, {
         credentials: mapToken,
         center: center,
         zoom: 2,
         mapTypeId: Microsoft.Maps.MapTypeId.canvasLight,
     });
 
-    if (tourspots.length === 0) return;
+    if (!tourspots?.length) return;
 
     const pin_svg =
         '<svg width="10" height="10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="5" fill="rgba(10, 90, 10, 0.5)" /></svg>';

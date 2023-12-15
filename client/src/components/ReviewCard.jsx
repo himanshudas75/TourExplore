@@ -15,8 +15,11 @@ import ImageCarousel from './ImageCarousel';
 import { colors } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import useAuth from '../hooks/useAuth';
 
 function ReviewCard({ review }) {
+    const { auth } = useAuth();
+
     const [isDeleteReviewDialogOpen, setIsDeleteReviewDialogOpen] =
         useState(false);
     const openDeleteReviewDialog = () => {
@@ -58,15 +61,19 @@ function ReviewCard({ review }) {
                             >
                                 {review.author.username}
                             </Typography>
-
-                            <Button
-                                variant="contained"
-                                color="error"
-                                size="small"
-                                onClick={openDeleteReviewDialog}
-                            >
-                                Delete
-                            </Button>
+                            {auth?.user_id &&
+                            auth?.user_id === review?.author?._id ? (
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    size="small"
+                                    onClick={openDeleteReviewDialog}
+                                >
+                                    Delete
+                                </Button>
+                            ) : (
+                                ''
+                            )}
                         </div>
                     </CardContent>
                 </div>

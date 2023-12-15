@@ -24,29 +24,11 @@ import '../stylesheets/HomeAppBar.css';
 import useData from '../hooks/useData.js';
 import useAuth from '../hooks/useAuth.js';
 
+import UserSettings from './UserSettings.jsx';
 function HomeAppBar() {
     const navigate = useNavigate();
     const { nav } = useData();
     const { auth } = useAuth();
-
-    const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
-    const openLogoutDialog = () => {
-        setIsLogoutDialogOpen(true);
-    };
-
-    const closeLogoutDialog = () => {
-        setIsLogoutDialogOpen(false);
-    };
-
-    const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] =
-        useState(false);
-    const openChangePasswordDialog = () => {
-        setIsChangePasswordDialogOpen(true);
-    };
-
-    const closeChangePasswordDialog = () => {
-        setIsChangePasswordDialogOpen(false);
-    };
 
     const [pages, setPages] = useState([
         { name: 'Home', link: nav.home, active: true, display: true },
@@ -67,27 +49,13 @@ function HomeAppBar() {
         }
     }, [auth]);
 
-    const settings = [
-        { name: 'Change Password', link: openChangePasswordDialog },
-        { name: 'Logout', link: openLogoutDialog },
-    ];
-
     const [anchorElNav, setAnchorElNav] = useState(null);
-    const [anchorElUser, setAnchorElUser] = useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
-    const handleOpenUserMenu = (event) => {
-        setAnchorElUser(event.currentTarget);
-    };
-
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
-    };
-
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
     };
 
     return (
@@ -212,61 +180,9 @@ function HomeAppBar() {
                         )}
                     </Box>
 
-                    {auth?.user_id ? (
-                        <Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title="Open settings">
-                                <IconButton
-                                    onClick={handleOpenUserMenu}
-                                    className="mb-1 ms-3"
-                                >
-                                    <Avatar
-                                        alt="Avatar"
-                                        src="/src/assets/avatar.png"
-                                    />
-                                    {/* <AccountCircle /> */}
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-                                {settings.map((setting) => (
-                                    <MenuItem
-                                        key={setting.name}
-                                        onClick={setting.link}
-                                    >
-                                        <Typography textAlign="center">
-                                            {setting.name}
-                                        </Typography>
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </Box>
-                    ) : (
-                        ''
-                    )}
+                    {auth?.user_id ? <UserSettings /> : ''}
                 </Toolbar>
             </Container>
-            <LogoutDialog
-                isOpen={isLogoutDialogOpen}
-                handleClose={closeLogoutDialog}
-            />
-            <ChangePasswordDialog
-                isOpen={isChangePasswordDialogOpen}
-                handleClose={closeChangePasswordDialog}
-            />
         </AppBar>
     );
 }

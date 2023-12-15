@@ -1,14 +1,10 @@
 import * as Yup from 'yup';
-import sanitizeHtml from 'sanitize-html';
+import validator from 'validator';
 
-// Create some custom messages for checks
 function htmlEscape(message = 'Must not include HTML') {
     return this.test('isHTML', message, function (value) {
         const { path, createError } = this;
-        const clean = sanitizeHtml(value, {
-            allowedTags: [],
-            allowedAttributes: {},
-        });
+        const clean = validator.escape(value);
         if (clean !== value) {
             return createError({ path, message });
         }

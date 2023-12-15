@@ -13,13 +13,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useData from '../hooks/useData.js';
 import { useNavigate } from 'react-router-dom';
 
-function DeleteDialog({
-    isOpen,
-    handleClose,
-    deleteAction,
-    title = 'Are you sure that you want to delete?',
-    description = 'This action cannot be undone.',
-}) {
+function DeleteUserDialog({ isOpen, handleClose, deleteAction }) {
     // const { nav } = useData();
     // const navigate = useNavigate();
 
@@ -44,10 +38,12 @@ function DeleteDialog({
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">
+                    {'Are you sure that you want to delete?'}
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        {description}
+                        This action cannot be undone.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -61,4 +57,4 @@ function DeleteDialog({
     );
 }
 
-export default DeleteDialog;
+export default DeleteUserDialog;

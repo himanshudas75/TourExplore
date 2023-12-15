@@ -4,18 +4,26 @@ import Typography from '@mui/material/Typography';
 
 import axios from '../api/axios';
 import { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { useSnackbar } from 'notistack';
 
 import { registerSchema } from '../schemas.js';
+import useData from '../hooks/useData.js';
+import useAuth from '../hooks/useAuth.js';
 
 function RegisterForm() {
     const userRef = useRef();
+    const { nav } = useData();
+    const { setAuth } = useAuth();
 
     useEffect(() => {
         userRef.current.focus();
     }, []);
     const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || nav.home;
 
     const initialValues = {
         username: '',
@@ -35,9 +43,17 @@ function RegisterForm() {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true,
             });
-            enqueueSnackbar('User registered successfully!', {
+
+            const accessToken = res.data.accessToken;
+            const user_id = res.data.user.user_id;
+            const username = res.data.user.username;
+
+            setAuth({ user_id, username, accessToken });
+
+            enqueueSnackbar('Successful Registration!', {
                 variant: 'success',
             });
+            navigate(from, { replace: true });
         } catch (err) {
             var message;
             if (!err?.response) {

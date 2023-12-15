@@ -2,9 +2,9 @@ import '../stylesheets/IndexPage.css';
 import { useEffect, useState } from 'react';
 import axios from '../api/axios';
 
-import Map from '../components/Map';
 import useTourspots from '../hooks/useTourspots.js';
 import TourspotCardHorizontalStack from '../components/TourspotCardHorizontalStack.jsx';
+import DisplayMap from '../components/DisplayMap.jsx';
 
 function IndexPage() {
     const { tourspots } = useTourspots();
@@ -12,10 +12,10 @@ function IndexPage() {
     return (
         <>
             <div className="cluster-map mb-4">
-                <Map
-                    action="map-cluster"
+                <DisplayMap
+                    action="cluster"
                     tourspots={tourspots}
-                    scriptName="clusterMap.js"
+                    div_id="map-cluster"
                 />
             </div>
             <div className="container">

@@ -4,13 +4,15 @@ import useData from '../hooks/useData';
 import { useSnackbar } from 'notistack';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import PageNotFound from './PageNotFound';
 
 function RequireAuth({ checkTAuthor }) {
     const { auth } = useAuth();
-    const { tourspots } = useData();
+    const { nav, tourspots } = useData();
     const location = useLocation();
     const { enqueueSnackbar } = useSnackbar();
     const { tourspotId } = useParams();
+
     const user_id = auth?.user_id;
 
     const userAuth = user_id ? true : false;
@@ -19,18 +21,18 @@ function RequireAuth({ checkTAuthor }) {
         : true;
 
     useEffect(() => {
-        if (!userAuth || !tourspotAuthor) {
+        if (!userAuth) {
             enqueueSnackbar('Unauthorized', { variant: 'error' });
         }
-    }, [userAuth, tourspotAuthor]);
+    }, [userAuth]);
 
     // implement 404 page here
-    return userAuth && tourspotAuthor ? (
+    return tourspotAuthor ? (
         <Outlet />
+    ) : userAuth ? (
+        <PageNotFound />
     ) : (
-        <>
-            <Navigate to="/login" state={{ from: location }} replace />
-        </>
+        <Navigate to={nav.login} state={{ from: location }} replace />
     );
 }
 

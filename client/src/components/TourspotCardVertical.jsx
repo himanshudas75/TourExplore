@@ -15,9 +15,11 @@ import { useNavigate } from 'react-router-dom';
 
 import DeleteDialog from './DeleteDialog';
 import { useState } from 'react';
+import useAuth from '../hooks/useAuth';
 
 function TourspotCardVertical({ tourspot }) {
     const navigate = useNavigate();
+    const { auth } = useAuth();
     const img_urls = tourspot.images.map((img) => img.url);
 
     const [isDeleteTourspotDialogOpen, setIsDeleteTourspotDialogOpen] =
@@ -70,26 +72,36 @@ function TourspotCardVertical({ tourspot }) {
                                 primary={`₹ ${tourspot.expected_budget}`}
                             />
                         </ListItem>
-                        <Divider component="li" />
+                        {auth?.user_id &&
+                        auth?.user_id === tourspot?.author?._id ? (
+                            <Divider component="li" />
+                        ) : (
+                            ''
+                        )}
                     </List>
-                    <CardActions className="mb-2 ms-2">
-                        <Button
-                            variant="contained"
-                            onClick={() =>
-                                navigate(`/tourspots/${tourspot._id}/edit`)
-                            }
-                            className="me-2"
-                        >
-                            Edit
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="error"
-                            onClick={openDeleteTourspotDialog}
-                        >
-                            Delete
-                        </Button>
-                    </CardActions>
+                    {auth?.user_id &&
+                    auth?.user_id === tourspot?.author?._id ? (
+                        <CardActions className="mb-2 ms-2">
+                            <Button
+                                variant="contained"
+                                onClick={() =>
+                                    navigate(`/tourspots/${tourspot._id}/edit`)
+                                }
+                                className="me-2"
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={openDeleteTourspotDialog}
+                            >
+                                Delete
+                            </Button>
+                        </CardActions>
+                    ) : (
+                        ''
+                    )}
                 </div>
             </div>
             <DeleteDialog
