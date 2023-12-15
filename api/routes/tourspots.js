@@ -20,7 +20,7 @@ router
     .route('/new')
     .post(
         isAuthenticated,
-        upload.array('tourspot[image]'),
+        upload.array('tourspot[images]'),
         validateTourspot,
         catchAsync(tourspots.createTourspot)
     );
@@ -32,7 +32,7 @@ router
         isAuthenticated,
         isTourspot,
         isTourspotAuthor,
-        upload.array('tourspot[image]'),
+        upload.array('tourspot[images]'),
         validateTourspot,
         catchAsync(tourspots.updateTourspot)
     )

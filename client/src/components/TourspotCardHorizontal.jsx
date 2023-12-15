@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 
 import useData from '../hooks/useData.js';
 
-function IndexPageCard({ tourspot }) {
+function TourspotCardHorizontal({ tourspot }) {
     const { nav } = useData();
     const navigate = useNavigate();
 
@@ -57,4 +57,4 @@ function IndexPageCard({ tourspot }) {
     );
 }
 
-export default IndexPageCard;
+export default TourspotCardHorizontal;

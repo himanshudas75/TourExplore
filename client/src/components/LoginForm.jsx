@@ -6,7 +6,7 @@ import { useState, useRef, useEffect, useContext } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
-import axios from 'axios';
+import axios from '../api/axios';
 
 import '../stylesheets/LoginForm.css';
 
@@ -45,9 +45,8 @@ function LoginForm() {
             const accessToken = res.data.accessToken;
             const user_id = res.data.user.user_id;
             const username = e.username;
-            const password = e.password;
 
-            setAuth({ user_id, username, password, accessToken });
+            setAuth({ user_id, username, accessToken });
             enqueueSnackbar(res.data.message, {
                 variant: 'success',
             });
@@ -64,7 +63,12 @@ function LoginForm() {
 
     return (
         <>
-            <Typography gutterBottom variant="h6" component="div">
+            <Typography
+                gutterBottom
+                variant="h6"
+                component="div"
+                className="mb-3"
+            >
                 Login
             </Typography>
             <Formik

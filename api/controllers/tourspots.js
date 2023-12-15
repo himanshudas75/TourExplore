@@ -8,7 +8,7 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.showTourspot = async (req, res) => {
-    const tourspot = await Tourspot.findById(req.params.tourspotId)
+    const tourspot = await Tourspot.findOne({ _id: req.params.tourspotId })
         .populate({
             path: 'reviews',
             populate: {
@@ -17,7 +17,13 @@ module.exports.showTourspot = async (req, res) => {
             },
         })
         .populate('author', 'username');
-    res.json(tourspot);
+    const imagesWithVirtual = tourspot.images.map((image) => ({
+        ...image.toJSON(),
+        thumbnail: image.thumbnail,
+    }));
+    const tourspotJSON = tourspot.toJSON();
+    tourspotJSON.images = imagesWithVirtual;
+    res.json(tourspotJSON);
 };
 
 module.exports.createTourspot = async (req, res) => {

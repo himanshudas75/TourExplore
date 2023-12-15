@@ -1,27 +1,25 @@
 import '../stylesheets/IndexPage.css';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../api/axios';
 
 import Map from '../components/Map';
-import IndexPageCard from '../components/IndexPageCard';
-import useData from '../hooks/useData.js';
+import useTourspots from '../hooks/useTourspots.js';
+import TourspotCardHorizontalStack from '../components/TourspotCardHorizontalStack.jsx';
 
 function IndexPage() {
-    const { tourspots } = useData();
+    const { tourspots } = useTourspots();
 
     return (
         <>
             <div className="cluster-map mb-4">
-                <Map tourspots={tourspots} scriptName="clusterMap.js" />
+                <Map
+                    action="map-cluster"
+                    tourspots={tourspots}
+                    scriptName="clusterMap.js"
+                />
             </div>
             <div className="container">
-                {tourspots.length ? (
-                    tourspots.map((tourspot) => (
-                        <IndexPageCard key={tourspot._id} tourspot={tourspot} />
-                    ))
-                ) : (
-                    <></>
-                )}
+                <TourspotCardHorizontalStack tourspots={tourspots} />
             </div>
         </>
     );

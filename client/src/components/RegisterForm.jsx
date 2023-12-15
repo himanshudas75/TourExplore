@@ -2,7 +2,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import axios from 'axios';
+import axios from '../api/axios';
 import { useEffect, useRef, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -49,7 +49,12 @@ function RegisterForm() {
 
     return (
         <>
-            <Typography gutterBottom variant="h6" component="div">
+            <Typography
+                gutterBottom
+                variant="h6"
+                component="div"
+                className="mb-3"
+            >
                 Register
             </Typography>
             <Formik

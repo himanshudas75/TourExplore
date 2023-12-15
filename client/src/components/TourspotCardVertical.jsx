@@ -13,9 +13,24 @@ import ImageCarousel from './ImageCarousel';
 import { colors } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-function ShowTourspotPageCard({ tourspot }) {
+import DeleteDialog from './DeleteDialog';
+import { useState } from 'react';
+
+function TourspotCardVertical({ tourspot }) {
     const navigate = useNavigate();
     const img_urls = tourspot.images.map((img) => img.url);
+
+    const [isDeleteTourspotDialogOpen, setIsDeleteTourspotDialogOpen] =
+        useState(false);
+    const openDeleteTourspotDialog = () => {
+        setIsDeleteTourspotDialogOpen(true);
+    };
+
+    const closeDeleteTourspotDialog = () => {
+        setIsDeleteTourspotDialogOpen(false);
+    };
+
+    async function deleteTourspot() {}
 
     return (
         <Card elevation={3} className="mb-4">
@@ -67,14 +82,23 @@ function ShowTourspotPageCard({ tourspot }) {
                         >
                             Edit
                         </Button>
-                        <Button variant="contained" color="error">
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={openDeleteTourspotDialog}
+                        >
                             Delete
                         </Button>
                     </CardActions>
                 </div>
             </div>
+            <DeleteDialog
+                isOpen={isDeleteTourspotDialogOpen}
+                handleClose={closeDeleteTourspotDialog}
+                deleteAction={deleteTourspot}
+            />
         </Card>
     );
 }
 
-export default ShowTourspotPageCard;
+export default TourspotCardVertical;

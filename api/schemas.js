@@ -25,14 +25,14 @@ const extension = (joi) => ({
 const Joi = BaseJoi.extend(extension);
 
 module.exports.userSchema = Joi.object({
-    username: Joi.string().required().escapeHTML(),
+    username: Joi.string().required().escapeHTML().min(2).max(50),
     email: Joi.string().email().required().escapeHTML(),
-    password: Joi.string().required(),
+    password: Joi.string().required().min(8).max(50),
 });
 
 module.exports.tourspotSchema = Joi.object({
     tourspot: Joi.object({
-        title: Joi.string().required().escapeHTML(),
+        title: Joi.string().required().escapeHTML().min(2).max(50),
         expected_budget: Joi.number().required().min(0),
         location: Joi.string().required().escapeHTML(),
         description: Joi.string().required().escapeHTML(),
@@ -42,7 +42,7 @@ module.exports.tourspotSchema = Joi.object({
 
 module.exports.reviewSchema = Joi.object({
     review: Joi.object({
-        title: Joi.string().required().escapeHTML(),
+        title: Joi.string().required().escapeHTML().min(2).max(50),
         body: Joi.string().required().escapeHTML(),
         rating: Joi.number().required().min(1).max(5),
     }).required(),

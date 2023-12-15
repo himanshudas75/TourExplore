@@ -2,67 +2,57 @@ import { Route, Routes } from 'react-router-dom';
 
 import './stylesheets/App.css';
 
-import axios from 'axios';
+import axios from './api/axios';
 
 import Home from './views/Home.jsx';
 import IndexPage from './views/IndexPage.jsx';
 import Layout from './Layout.jsx';
 import Auth from './views/Auth.jsx';
 import ShowTourspotPage from './views/ShowTourspotPage.jsx';
-import NewTourspot from './views/NewTourspot.jsx';
+import NewTourspotForm from './components/NewTourspotForm.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
-import Logout from './components/Logout.jsx';
-import EditTourspot from './views/EditTourspot.jsx';
-
-import useData from './hooks/useData.js';
-import { useEffect } from 'react';
-import { useSnackbar } from 'notistack';
-
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
-// axios.defaults.withCredentials = true;
+// import Logout from './components/Logout.jsx';
+import EditTourspotForm from './components/EditTourspotForm.jsx';
+import PersistLogin from './components/PersistLogin.jsx';
+import LoginForm from './components/LoginForm.jsx';
+import RegisterForm from './components/RegisterForm.jsx';
+import TourspotFunction from './views/TourspotFunction.jsx';
 
 function App() {
-    const { setTourspots } = useData();
-    const { enqueueSnackbar } = useSnackbar();
-
-    useEffect(() => {
-        async function getTourspots() {
-            try {
-                const res = await axios.get('/tourspots');
-                setTourspots(res.data);
-                navigate(from, { replace: true });
-            } catch (err) {
-                var message;
-                if (!err?.response) {
-                    message = 'No response from server';
-                } else message = err.response.data.message;
-                enqueueSnackbar(message, { variant: 'error' });
-            }
-        }
-        getTourspots();
-    }, []);
-
     return (
         <Routes>
             <Route index element={<Home />} />
             <Route path="/" element={<Layout />}>
-                <Route path="/login" element={<Auth action="login" />} />
-                <Route path="/register" element={<Auth action="register" />} />
-                <Route path="/logout" element={<Logout />} />
-
-                <Route path="tourspots">
-                    <Route index element={<IndexPage />} />
-                    <Route path=":tourspotId" element={<ShowTourspotPage />} />
-                    <Route element={<RequireAuth />}>
-                        <Route path="new" element={<NewTourspot />} />
-                    </Route>
-                    <Route element={<RequireAuth checkTAuthor={true} />}>
-                        <Route
-                            path=":tourspotId/edit"
-                            element={<EditTourspot />}
-                        />
-                    </Route>
+                {/* Unprotected routes */}
+                <Route element={<Auth />}>
+                    <Route path="login" element={<LoginForm />} />
+                    <Route path="register" element={<RegisterForm />} />
                 </Route>
+                {/* <Route path="logout" element={<Logout />} /> */}
+                <Route path="tourspots" element={<IndexPage />} />
+                <Route
+                    path="tourspots/:tourspotId"
+                    element={<ShowTourspotPage />}
+                />
+
+                {/* Protected routes */}
+                {/* <Route element={<PersistLogin />}> */}
+                {/* <Route element={<RequireAuth />}> */}
+                <Route
+                    path="tourspots/new"
+                    element={<TourspotFunction action="new" />}
+                />
+                {/* </Route> */}
+                {/* <Route element={<RequireAuth checkTAuthor={true} />}> */}
+                <Route
+                    path="tourspots/:tourspotId/edit"
+                    element={<TourspotFunction action="edit" />}
+                />
+                {/* </Route> */}
+                {/* </Route> */}
+
+                {/* catch all */}
+                {/* <Route path="*" element={<PageNotFound />} /> */}
             </Route>
         </Routes>
     );

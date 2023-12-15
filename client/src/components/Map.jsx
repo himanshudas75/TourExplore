@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-function Map({ tourspots, scriptName }) {
+function Map({ action, tourspot, tourspots, scriptName }) {
     const mapToken = import.meta.env.VITE_BING_API_KEY;
 
     useEffect(() => {
@@ -13,7 +13,11 @@ function Map({ tourspots, scriptName }) {
 
         tokenScript.innerHTML = `
                 window.mapToken = '${mapToken}';
-                window.tourspots = ${JSON.stringify(tourspots)};
+                ${
+                    action === 'map-cluster'
+                        ? `window.tourspots = ${JSON.stringify(tourspots)};`
+                        : `window.tourspot = ${JSON.stringify(tourspot)};`
+                }
         `;
         document.body.appendChild(tokenScript);
 
@@ -31,7 +35,7 @@ function Map({ tourspots, scriptName }) {
     }, [tourspots]);
     return (
         <>
-            <div id="map-cluster" className="map"></div>
+            <div id={action} className="map"></div>
         </>
     );
 }

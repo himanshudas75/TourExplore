@@ -11,10 +11,15 @@ function ImageCarousel({ images }) {
     };
 
     return (
-        <Carousel activeIndex={index} onSelect={handleSelect}>
+        <Carousel
+            activeIndex={index}
+            onSelect={handleSelect}
+            controls={images.length > 1 ? true : false}
+            indicators={false}
+        >
             {images.map((img) => (
                 <Carousel.Item key={uuid()}>
-                    <img src={img} className="img-fluid" />
+                    <img src={img} className="d-block w-100" />
                 </Carousel.Item>
             ))}
         </Carousel>
