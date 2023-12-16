@@ -12,6 +12,7 @@ const FileInput = ({
     fullWidth = false,
     helperText = '',
     error = false,
+    disabled = false,
 }) => {
     const { setFieldValue } = useFormikContext();
 
@@ -41,6 +42,7 @@ const FileInput = ({
             onChange={handleFileChange}
             helperText={helperText}
             error={error}
+            disabled={disabled}
         />
     );
 };

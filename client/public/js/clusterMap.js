@@ -18,10 +18,10 @@ function GetClusterMap(mapToken, tourspots, div_id) {
     infobox.setMap(map);
 
     Microsoft.Maps.loadModule('Microsoft.Maps.Clustering', function () {
-        const pins = tourspots.map(function (tourspot) {
-            const coordinates = new Microsoft.Maps.Location(
-                ...tourspot.geometry.coordinates
-            );
+        const p = tourspots.map(function (tourspot) {
+            const c = tourspot.geometry.coordinates;
+            if (!c.length) return null;
+            const coordinates = new Microsoft.Maps.Location(...c);
 
             const pushpin = new Microsoft.Maps.Pushpin(coordinates, {
                 icon: pin_svg,
@@ -42,6 +42,7 @@ function GetClusterMap(mapToken, tourspots, div_id) {
 
             return pushpin;
         });
+        const pins = p.filter((item) => item);
 
         const clusterLayer = new Microsoft.Maps.ClusterLayer(pins, {
             clusteredPinCallback: createCustomClusteredPin,

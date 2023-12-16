@@ -13,15 +13,21 @@ import ImageCarousel from './ImageCarousel';
 import { colors } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+import { useSnackbar } from 'notistack';
 import DeleteDialog from './DeleteDialog';
 import { useState } from 'react';
 import useAuth from '../hooks/useAuth';
+import useData from '../hooks/useData';
+import useTourspots from '../hooks/useTourspots';
 
 function TourspotCardVertical({ tourspot }) {
+    const { deleteTourspot } = useTourspots();
     const navigate = useNavigate();
     const { auth } = useAuth();
-    const img_urls = tourspot.images.map((img) => img.url);
-
+    const { nav } = useData();
+    const img_urls = tourspot?.images?.map((img) => img.url);
+    const { enqueueSnackbar } = useSnackbar();
+    const [isDeleting, setisDeleting] = useState(false);
     const [isDeleteTourspotDialogOpen, setIsDeleteTourspotDialogOpen] =
         useState(false);
     const openDeleteTourspotDialog = () => {
@@ -32,7 +38,36 @@ function TourspotCardVertical({ tourspot }) {
         setIsDeleteTourspotDialogOpen(false);
     };
 
-    async function deleteTourspot() {}
+    async function removeTourspot() {
+        try {
+            setisDeleting(true);
+            const res = await deleteTourspot(tourspot._id);
+            if (res) {
+                if (res.success) {
+                    enqueueSnackbar('Tourspot deleted successfully!', {
+                        variant: 'success',
+                    });
+                    setIsDeleteTourspotDialogOpen(false);
+                    navigate(nav.index);
+                } else {
+                    enqueueSnackbar(res.message, {
+                        variant: 'error',
+                    });
+                }
+            } else {
+                enqueueSnackbar('No response from server', {
+                    variant: 'error',
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            enqueueSnackbar('Something went wrong, please try again', {
+                variant: 'error',
+            });
+        } finally {
+            setisDeleting(false);
+        }
+    }
 
     return (
         <Card elevation={3} className="mb-4">
@@ -49,27 +84,27 @@ function TourspotCardVertical({ tourspot }) {
                             component="div"
                             className="fw-bold"
                         >
-                            {tourspot.title}
+                            {tourspot?.title}
                         </Typography>
                         <Typography component="p">
-                            {tourspot.description}
+                            {tourspot?.description}
                         </Typography>
                     </CardContent>
                     <List>
                         <Divider component="li" />
                         <ListItem>
-                            <ListItemText secondary={tourspot.location} />
+                            <ListItemText secondary={tourspot?.location} />
                         </ListItem>
                         <Divider component="li" />
                         <ListItem>
                             <ListItemText
-                                primary={`Submitted by ${tourspot.author.username}`}
+                                primary={`Submitted by ${tourspot?.author?.username}`}
                             />
                         </ListItem>
                         <Divider component="li" />
                         <ListItem>
                             <ListItemText
-                                primary={`₹ ${tourspot.expected_budget}`}
+                                primary={`₹ ${tourspot?.expected_budget}`}
                             />
                         </ListItem>
                         {auth?.user_id &&
@@ -85,7 +120,9 @@ function TourspotCardVertical({ tourspot }) {
                             <Button
                                 variant="contained"
                                 onClick={() =>
-                                    navigate(`/tourspots/${tourspot._id}/edit`)
+                                    navigate(
+                                        `${nav.index}/${tourspot?._id}/edit`
+                                    )
                                 }
                                 className="me-2"
                             >
@@ -107,7 +144,8 @@ function TourspotCardVertical({ tourspot }) {
             <DeleteDialog
                 isOpen={isDeleteTourspotDialogOpen}
                 handleClose={closeDeleteTourspotDialog}
-                deleteAction={deleteTourspot}
+                deleteAction={removeTourspot}
+                disabled={isDeleting}
             />
         </Card>
     );

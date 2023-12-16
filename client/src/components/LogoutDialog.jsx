@@ -1,32 +1,56 @@
-import { Fragment } from 'react';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    DialogContentText,
+} from '@mui/material';
+
+import { Fragment, useState } from 'react';
 import { useSnackbar } from 'notistack';
 
-import useLogout from '../hooks/useLogout.js';
-
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import useUser from '../hooks/useUser.js';
 
 import useData from '../hooks/useData.js';
 import { useNavigate } from 'react-router-dom';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 function LogoutDialog({ isOpen, handleClose }) {
     const { nav } = useData();
     const navigate = useNavigate();
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const { enqueueSnackbar } = useSnackbar();
-    const logout = useLogout();
+    const { logout } = useUser();
     const signOut = async () => {
         try {
-            await logout();
-            handleClose();
-            enqueueSnackbar('Logged out successfully', { variant: 'success' });
-            navigate(nav.login);
+            setIsSubmitting(true);
+            const res = await logout();
+            if (res) {
+                if (res.success) {
+                    enqueueSnackbar('Logged out successfully', {
+                        variant: 'success',
+                    });
+                    navigate(nav.login);
+                } else {
+                    enqueueSnackbar(res.message, {
+                        variant: 'error',
+                    });
+                }
+            } else {
+                enqueueSnackbar('No response from server', {
+                    variant: 'error',
+                });
+            }
         } catch (err) {
-            enqueueSnackbar('Something went wrong', { variant: 'error' });
+            console.error(err);
+            enqueueSnackbar('Something went wrong, please try again', {
+                variant: 'error',
+            });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -47,10 +71,22 @@ function LogoutDialog({ isOpen, handleClose }) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={signOut} color="error" autoFocus>
+                    <ClipLoader
+                        size="25px"
+                        color="rgb(124,124,124)"
+                        loading={isSubmitting}
+                    />
+                    <Button
+                        onClick={signOut}
+                        color="error"
+                        disabled={isSubmitting}
+                        autoFocus
+                    >
                         Confirm Logout
                     </Button>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose} disabled={isSubmitting}>
+                        Cancel
+                    </Button>
                 </DialogActions>
             </Dialog>
         </Fragment>

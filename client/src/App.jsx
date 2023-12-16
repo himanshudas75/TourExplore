@@ -17,7 +17,7 @@ import LoginForm from './components/LoginForm.jsx';
 import RegisterForm from './components/RegisterForm.jsx';
 import TourspotFunction from './views/TourspotFunction.jsx';
 import RequireNoAuth from './components/RequireNoAuth.jsx';
-import PageNotFound from './components/PageNotFound.jsx';
+import PageNotFound from './views/PageNotFound.jsx';
 
 function App() {
     return (

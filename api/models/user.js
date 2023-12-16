@@ -19,6 +19,10 @@ const userSchema = new Schema({
         required: true,
     },
     refreshToken: String,
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 userSchema.post('findOneAndDelete', async function (doc) {
@@ -36,6 +40,12 @@ userSchema.post('findOneAndDelete', async function (doc) {
                 },
             });
         }
+
+        await Review.deleteMany({
+            author: {
+                $eq: doc._id,
+            },
+        });
 
         await Tourspot.deleteMany({
             author: {

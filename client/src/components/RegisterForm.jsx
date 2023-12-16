@@ -2,20 +2,19 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import axios from '../api/axios';
-import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Formik, Form, Field } from 'formik';
+import { useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Formik, Form } from 'formik';
 import { useSnackbar } from 'notistack';
 
 import { registerSchema } from '../schemas.js';
 import useData from '../hooks/useData.js';
-import useAuth from '../hooks/useAuth.js';
+import useUser from '../hooks/useUser.js';
 
 function RegisterForm() {
+    const { register } = useUser();
     const userRef = useRef();
     const { nav } = useData();
-    const { setAuth } = useAuth();
 
     useEffect(() => {
         userRef.current.focus();
@@ -29,6 +28,7 @@ function RegisterForm() {
         username: '',
         email: '',
         password: '',
+        confirmPassword: '',
     };
 
     async function onSubmit(e) {
@@ -39,27 +39,27 @@ function RegisterForm() {
         };
 
         try {
-            const res = await axios.post('/register', JSON.stringify(data), {
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: true,
-            });
-
-            const accessToken = res.data.accessToken;
-            const user_id = res.data.user.user_id;
-            const username = res.data.user.username;
-
-            setAuth({ user_id, username, accessToken });
-
-            enqueueSnackbar('Successful Registration!', {
-                variant: 'success',
-            });
-            navigate(from, { replace: true });
+            const res = await register(data);
+            if (res) {
+                if (res.success) {
+                    enqueueSnackbar('User registered successfully!', {
+                        variant: 'success',
+                    });
+                    navigate(from, { replace: true });
+                } else {
+                    enqueueSnackbar(res.message, {
+                        variant: 'error',
+                    });
+                }
+            } else {
+                enqueueSnackbar('No response from server', {
+                    variant: 'error',
+                });
+            }
         } catch (err) {
-            var message;
-            if (!err?.response) {
-                message = 'No response from server';
-            } else message = err.response.data.message;
-            enqueueSnackbar(message, { variant: 'error' });
+            enqueueSnackbar('Something went wrong, please try again', {
+                variant: 'error',
+            });
         }
     }
 
@@ -125,6 +125,27 @@ function RegisterForm() {
                                 }
                                 helperText={touched.password && errors.password}
                                 value={values.password}
+                                fullWidth
+                                required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <TextField
+                                id="confirmPassword"
+                                label="Confirm Password"
+                                type="password"
+                                variant="outlined"
+                                size="small"
+                                onChange={handleChange}
+                                error={
+                                    touched.confirmPassword &&
+                                    Boolean(errors.confirmPassword)
+                                }
+                                helperText={
+                                    touched.confirmPassword &&
+                                    errors.confirmPassword
+                                }
+                                value={values.confirmPassword}
                                 fullWidth
                                 required
                             />

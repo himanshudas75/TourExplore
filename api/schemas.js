@@ -27,7 +27,7 @@ const Joi = BaseJoi.extend(extension);
 module.exports.userSchema = Joi.object({
     username: Joi.string().required().escapeHTML().min(2).max(50),
     email: Joi.string().email().required().escapeHTML(),
-    password: Joi.string().required().min(2).max(50),
+    password: Joi.string().required().min(8).max(50),
 });
 
 module.exports.tourspotSchema = Joi.object({

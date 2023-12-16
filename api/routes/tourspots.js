@@ -14,7 +14,7 @@ const {
     isTourspot,
 } = require('../middleware');
 
-router.get('/', catchAsync(tourspots.index));
+router.get('/', catchAsync(tourspots.getAllTourspots));
 
 router
     .route('/new')
@@ -27,7 +27,7 @@ router
 
 router
     .route('/:tourspotId/')
-    .get(isTourspot, catchAsync(tourspots.showTourspot))
+    .get(isTourspot, catchAsync(tourspots.getTourspot))
     .put(
         isAuthenticated,
         isTourspot,

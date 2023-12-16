@@ -1,48 +1,38 @@
-import { Fragment, useEffect, useRef } from 'react';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    TextField,
+} from '@mui/material';
+
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useSnackbar } from 'notistack';
+import { Formik, Form, useFormikContext } from 'formik';
 
-import useLogout from '../hooks/useLogout.js';
-import TextField from '@mui/material/TextField';
-import { Formik, Form, Field, useFormikContext } from 'formik';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { passwordSchema } from '../schemas.js';
+import useAxiosPrivate from '../hooks/useAxiosPrivate.js';
+import useUser from '../hooks/useUser.js';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-import useData from '../hooks/useData.js';
-import { useNavigate } from 'react-router-dom';
-
-function SubmitButton() {
+function SubmitButton({ disabled = false }) {
     const { submitForm } = useFormikContext();
 
     return (
-        <Button type="submit" onClick={submitForm}>
+        <Button type="submit" onClick={submitForm} disabled={disabled}>
             Confirm
         </Button>
     );
 }
 
 function ChangePasswordDialog({ isOpen, handleClose }) {
-    // const { nav } = useData();
-    // const navigate = useNavigate();
-
-    // const { enqueueSnackbar } = useSnackbar();
-    // const logout = useLogout();
-    // const signOut = async () => {
-    //     try {
-    //         await logout();
-    //         handleClose();
-    //         enqueueSnackbar('Logged out successfully', { variant: 'success' });
-    //         navigate(nav.login);
-    //     } catch (err) {
-    //         enqueueSnackbar('Something went wrong', { variant: 'error' });
-    //     }
-    // };
-
-    // const passwordRef = useRef();
+    const axiosPrivate = useAxiosPrivate();
+    const { enqueueSnackbar } = useSnackbar();
     const passwordRef = useRef();
+    const { changePassword } = useUser();
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         passwordRef?.current?.focus();
@@ -50,10 +40,41 @@ function ChangePasswordDialog({ isOpen, handleClose }) {
 
     const initialValues = {
         password: '',
+        confirmPassword: '',
     };
 
     async function onSubmit(e) {
-        console.log(e);
+        const data = {
+            password: e.password,
+        };
+
+        try {
+            setIsSubmitting(true);
+            const res = await changePassword(data);
+            if (res) {
+                if (res.success) {
+                    enqueueSnackbar('Password changed successfully!', {
+                        variant: 'success',
+                    });
+                    handleClose();
+                } else {
+                    enqueueSnackbar(res.message, {
+                        variant: 'error',
+                    });
+                }
+            } else {
+                enqueueSnackbar('No response from server', {
+                    variant: 'error',
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            enqueueSnackbar('Something went wrong, please try again', {
+                variant: 'error',
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     return (
@@ -69,14 +90,10 @@ function ChangePasswordDialog({ isOpen, handleClose }) {
                     {'Please enter your new password'}
                 </DialogTitle>
 
-                {/* <DialogContentText id="alert-dialog-description">
-                        You will be redirected to the Login screen.
-                    </DialogContentText> */}
                 <Formik
                     initialValues={initialValues}
-                    // validationSchema={newTourspotSchema}
+                    validationSchema={passwordSchema}
                     onSubmit={onSubmit}
-                    // innerRef={formikRef}
                 >
                     {({ values, handleChange, errors, touched }) => (
                         <>
@@ -102,14 +119,48 @@ function ChangePasswordDialog({ isOpen, handleClose }) {
                                             value={values.password}
                                             fullWidth
                                             required
+                                            disabled={isSubmitting}
+                                            autoFocus
+                                        />
+                                    </div>
+                                    <div className="mb-3 mt-2">
+                                        <TextField
+                                            id="confirmPassword"
+                                            type="password"
+                                            label="Confirm Password"
+                                            variant="outlined"
+                                            size="small"
+                                            onChange={handleChange}
+                                            error={
+                                                touched.confirmPassword &&
+                                                Boolean(errors.confirmPassword)
+                                            }
+                                            helperText={
+                                                touched.confirmPassword &&
+                                                errors.confirmPassword
+                                            }
+                                            value={values.confirmPassword}
+                                            fullWidth
+                                            required
+                                            disabled={isSubmitting}
                                             autoFocus
                                         />
                                     </div>
                                 </Form>
                             </DialogContent>
                             <DialogActions>
-                                <SubmitButton />
-                                <Button onClick={handleClose}>Cancel</Button>
+                                <ClipLoader
+                                    size="25px"
+                                    color="rgb(124,124,124)"
+                                    loading={isSubmitting}
+                                />
+                                <SubmitButton disabled={isSubmitting} />
+                                <Button
+                                    onClick={handleClose}
+                                    disabled={isSubmitting}
+                                >
+                                    Cancel
+                                </Button>
                             </DialogActions>
                         </>
                     )}

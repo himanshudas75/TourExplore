@@ -2,12 +2,16 @@ const Tourspot = require('../models/tourspot');
 const { cloudinary } = require('../utils/cloudinary');
 const { findLocation } = require('../utils/findLocation');
 
-module.exports.index = async (req, res) => {
-    const tourspots = await Tourspot.find({});
-    res.json(tourspots);
+module.exports.getAllTourspots = async (req, res) => {
+    const tourspots = await Tourspot.find({}).sort({ createdAt: 1 });
+    res.json({
+        success: true,
+        message: 'Successfully fetched all tourspots',
+        tourspots: tourspots,
+    });
 };
 
-module.exports.showTourspot = async (req, res) => {
+module.exports.getTourspot = async (req, res) => {
     const tourspot = await Tourspot.findOne({ _id: req.params.tourspotId })
         .populate({
             path: 'reviews',
@@ -21,9 +25,14 @@ module.exports.showTourspot = async (req, res) => {
         ...image.toJSON(),
         thumbnail: image.thumbnail,
     }));
+    tourspot.reviews = tourspot.reviews.sort({ createdAt: 1 });
     const tourspotJSON = tourspot.toJSON();
-    tourspotJSON.images = imagesWithVirtual;
-    res.json(tourspotJSON);
+    tourspotJSON.images = imagesWithVirtual.sort({ createdAt: 1 });
+    res.json({
+        success: true,
+        message: 'Successfully fetched tourspot',
+        tourspot: tourspotJSON,
+    });
 };
 
 module.exports.createTourspot = async (req, res) => {

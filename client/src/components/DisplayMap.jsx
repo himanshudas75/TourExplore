@@ -18,13 +18,18 @@ function DisplayMap({ action, tourspot, tourspots, div_id }) {
         `;
 
         document.head.appendChild(tokenScript);
+
         return () => {
             document.head.removeChild(tokenScript);
         };
     }, [tourspots]);
     return (
         <>
-            <div id={div_id} className="map"></div>
+            <div
+                id={div_id}
+                className="map"
+                style={{ height: '100%', width: '100%' }}
+            ></div>
         </>
     );
 }

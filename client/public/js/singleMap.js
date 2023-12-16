@@ -1,10 +1,13 @@
 function GetSingleMap(mapToken, tourspot, div_id) {
     if (!tourspot) return;
-    const center = new Microsoft.Maps.Location(
-        ...tourspot.geometry.coordinates
-    );
-    const pin_svg =
-        '<svg width="10" height="10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="5" fill="rgba(10, 90, 10, 0.5)" /></svg>';
+    const defaultCoordinates = new Microsoft.Maps.Location(50.8038, 18.78586);
+    const coordinates = tourspot.geometry.coordinates;
+    var center = [];
+    var pushPin = false;
+    if (coordinates.length) {
+        center = new Microsoft.Maps.Location(...coordinates);
+        pushPin = true;
+    } else center = defaultCoordinates;
 
     const map = new Microsoft.Maps.Map(`#${div_id}`, {
         credentials: mapToken,
@@ -27,5 +30,5 @@ function GetSingleMap(mapToken, tourspot, div_id) {
         infobox.setOptions({ visible: true });
     });
 
-    map.entities.push(pin);
+    if (pushPin) map.entities.push(pin);
 }

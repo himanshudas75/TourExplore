@@ -1,22 +1,17 @@
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { TextField, Button, Typography } from '@mui/material';
 
-import { useState, useRef, useEffect, useContext } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Formik, Form } from 'formik';
-
-import axios from '../api/axios';
-
-import '../stylesheets/LoginForm.css';
 
 import { loginSchema } from '../schemas.js';
 import { useSnackbar } from 'notistack';
-import useAuth from '../hooks/useAuth.js';
 import useData from '../hooks/useData.js';
 
+import useUser from '../hooks/useUser.js';
+
 function LoginForm() {
-    const { setAuth } = useAuth();
+    const { login } = useUser();
     const { nav } = useData();
 
     const userRef = useRef();
@@ -40,27 +35,27 @@ function LoginForm() {
         };
 
         try {
-            const res = await axios.post('/login', JSON.stringify(data), {
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: true,
-            });
-
-            const accessToken = res.data.accessToken;
-            const user_id = res.data.user.user_id;
-            const username = res.data.user.username;
-
-            setAuth({ user_id, username, accessToken });
-            enqueueSnackbar('Logged in successfully!', {
-                variant: 'success',
-            });
-
-            navigate(from, { replace: true });
+            const res = await login(data);
+            if (res) {
+                if (res.success) {
+                    enqueueSnackbar('Logged in successfully!', {
+                        variant: 'success',
+                    });
+                    navigate(from, { replace: true });
+                } else {
+                    enqueueSnackbar(res.message, {
+                        variant: 'error',
+                    });
+                }
+            } else {
+                enqueueSnackbar('No response from server', {
+                    variant: 'error',
+                });
+            }
         } catch (err) {
-            var message;
-            if (!err?.response) {
-                message = 'No response from server';
-            } else message = err.response.data.message;
-            enqueueSnackbar(message, { variant: 'error' });
+            enqueueSnackbar('Something went wrong, please try again', {
+                variant: 'error',
+            });
         }
     }
 

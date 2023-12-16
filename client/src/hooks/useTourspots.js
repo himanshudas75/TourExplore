@@ -1,30 +1,73 @@
 import axios from '../api/axios';
-import useData from './useData';
+import useAxiosPrivate from './useAxiosPrivate';
 
 const useTourspots = () => {
-    const { tourspots, setTourspots } = useData();
+    const axiosPrivate = useAxiosPrivate();
 
-    const setAllTourspots = async () => {
+    const getAllTourspots = async () => {
         try {
             const res = await axios.get('/tourspots');
-            setTourspots(res.data);
+            return res.data;
         } catch (err) {
-            console.error(err);
+            return err?.response?.data;
         }
     };
 
     const getTourspot = async (tourspotId) => {
         try {
             const res = await axios.get(`/tourspots/${tourspotId}`);
-            console.log(res.data.images.map((image) => image.thumbnail));
             return res.data;
         } catch (err) {
-            console.error(err);
-            return null;
+            return err?.response?.data;
         }
     };
 
-    return { setAllTourspots, getTourspot, tourspots };
+    const createTourspot = async (data) => {
+        try {
+            const res = await axiosPrivate.post('/tourspots/new', data, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                withCredentials: true,
+            });
+            return res.data;
+        } catch (err) {
+            return err?.response?.data;
+        }
+    };
+
+    const editTourspot = async (tourspotId, data) => {
+        try {
+            const res = await axiosPrivate.put(
+                `/tourspots/${tourspotId}`,
+                data,
+                {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                    withCredentials: true,
+                }
+            );
+            return res.data;
+        } catch (err) {
+            return err?.response?.data;
+        }
+    };
+
+    const deleteTourspot = async (tourspotId) => {
+        try {
+            const res = await axiosPrivate.delete(`/tourspots/${tourspotId}`, {
+                withCredentials: true,
+            });
+            return res.data;
+        } catch (err) {
+            return err?.response?.data;
+        }
+    };
+
+    return {
+        getAllTourspots,
+        getTourspot,
+        createTourspot,
+        editTourspot,
+        deleteTourspot,
+    };
 };
 
 export default useTourspots;

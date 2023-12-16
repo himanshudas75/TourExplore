@@ -7,7 +7,7 @@ import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
-
+import ClipLoader from 'react-spinners/ClipLoader';
 import axios from '../api/axios';
 import { useEffect, useRef, useState } from 'react';
 import { Formik, Form, Field, useFormikContext } from 'formik';
@@ -15,9 +15,17 @@ import { useSnackbar } from 'notistack';
 import Grid from '@mui/material/Grid';
 
 import { tourspotSchema } from '../schemas.js';
+import useData from '../hooks/useData.js';
+import { useNavigate } from 'react-router-dom';
+import useTourspots from '../hooks/useTourspots.js';
+import Loading from './Loading.jsx';
 
 function EditTourspotForm({ tourspot }) {
     const titleRef = useRef();
+    const { nav } = useData();
+    const navigate = useNavigate();
+    const { editTourspot } = useTourspots();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         titleRef.current.focus();
@@ -33,8 +41,52 @@ function EditTourspotForm({ tourspot }) {
         deleteImages: [],
     };
 
+    function goBack() {
+        navigate(`${nav.index}/${tourspot._id}`);
+    }
+
     async function onSubmit(e) {
-        console.log(e);
+        setIsSubmitting(true);
+        const formData = new FormData();
+        formData.append('tourspot[title]', e.title);
+        formData.append('tourspot[location]', e.location);
+        formData.append('tourspot[expected_budget]', e.expected_budget);
+        formData.append('tourspot[description]', e.description);
+
+        e.images.forEach((image) => {
+            formData.append(`tourspot[images]`, image);
+        });
+
+        e.deleteImages.forEach((deleteImage, index) => {
+            formData.append(`deleteImages`, deleteImage);
+        });
+
+        try {
+            const res = await editTourspot(tourspot._id, formData);
+            if (res) {
+                if (res.success) {
+                    enqueueSnackbar('Tourspot updated successfully!', {
+                        variant: 'success',
+                    });
+                    goBack();
+                } else {
+                    enqueueSnackbar(res.message, {
+                        variant: 'error',
+                    });
+                }
+            } else {
+                enqueueSnackbar('No response from server', {
+                    variant: 'error',
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            enqueueSnackbar('Something went wrong, please try again', {
+                variant: 'error',
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     return (
@@ -66,6 +118,7 @@ function EditTourspotForm({ tourspot }) {
                                 helperText={touched.title && errors.title}
                                 value={values.title}
                                 fullWidth
+                                disabled={isSubmitting}
                                 required
                             />
                         </div>
@@ -82,6 +135,7 @@ function EditTourspotForm({ tourspot }) {
                                 helperText={touched.location && errors.location}
                                 value={values.location}
                                 fullWidth
+                                disabled={isSubmitting}
                                 required
                             />
                         </div>
@@ -95,6 +149,7 @@ function EditTourspotForm({ tourspot }) {
                                 fullWidth={true}
                                 error={touched.images && Boolean(errors.images)}
                                 helperText={touched.images && errors.images}
+                                disabled={isSubmitting}
                             />
                         </div>
                         <div className="mb-3">
@@ -124,6 +179,7 @@ function EditTourspotForm({ tourspot }) {
                                     errors.expected_budget
                                 }
                                 fullWidth
+                                disabled={isSubmitting}
                                 required
                             />
                         </div>
@@ -145,25 +201,30 @@ function EditTourspotForm({ tourspot }) {
                                 fullWidth
                                 multiline
                                 rows={4}
+                                disabled={isSubmitting}
                                 required
                             />
                         </div>
                         <Box className="mb-3" sx={{ width: '100%' }}>
-                            <Typography
-                                className="mb-3"
-                                gutterBottom
-                                variant="h6"
-                                component="div"
-                            >
-                                Select the images you want to delete
-                            </Typography>
+                            {tourspot?.images?.length ? (
+                                <Typography
+                                    className="mb-3"
+                                    gutterBottom
+                                    variant="h6"
+                                    component="div"
+                                >
+                                    Select the images you want to delete
+                                </Typography>
+                            ) : (
+                                ''
+                            )}
                             <Grid
                                 container
                                 rowSpacing={1}
                                 columnSpacing={{ xs: 2, md: 3 }}
                                 columns={{ xs: 4, sm: 8, md: 12 }}
                             >
-                                {tourspot.images.map((img, index) => (
+                                {tourspot?.images?.map((img, index) => (
                                     <Grid
                                         item
                                         xs={2}
@@ -192,19 +253,62 @@ function EditTourspotForm({ tourspot }) {
                                             onChange={handleChange}
                                             value={img.filename}
                                             className="pe-0 me-0"
+                                            disabled={isSubmitting}
                                         />
                                     </Grid>
                                 ))}
                             </Grid>
                         </Box>
-
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="success"
+                        <Grid
+                            container
+                            rowSpacing={1}
+                            columnSpacing={{ xs: 2, md: 3 }}
+                            columns={{ xs: 4, sm: 8, md: 12 }}
+                            className="mt-3"
                         >
-                            Update Tourist Spot
-                        </Button>
+                            <Grid
+                                item
+                                xs={2}
+                                sm={4}
+                                md={6}
+                                justifyContent="start"
+                                display="flex"
+                            >
+                                <Button
+                                    className="mb-4"
+                                    type="submit"
+                                    variant="contained"
+                                    color="success"
+                                    disabled={isSubmitting}
+                                >
+                                    Update Tourist Spot
+                                </Button>
+                                <ClipLoader
+                                    className="ms-4 mb-1"
+                                    size="25px"
+                                    color="rgb(124,124,124)"
+                                    loading={isSubmitting}
+                                />
+                            </Grid>
+                            <Grid
+                                item
+                                xs={2}
+                                sm={4}
+                                md={6}
+                                justifyContent="end"
+                                display="flex"
+                            >
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    className="mb-4 justify-content-end"
+                                    onClick={goBack}
+                                    disabled={isSubmitting}
+                                >
+                                    Go Back to Tourist Spot
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </Form>
                 )}
             </Formik>

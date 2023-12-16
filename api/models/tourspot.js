@@ -5,6 +5,10 @@ const Schema = mongoose.Schema;
 const imageSchema = new Schema({
     url: String,
     filename: String,
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 imageSchema.virtual('thumbnail').get(function () {
@@ -41,6 +45,10 @@ const tourspotSchema = new Schema(
                 ref: 'Review',
             },
         ],
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        },
     },
     opts
 );

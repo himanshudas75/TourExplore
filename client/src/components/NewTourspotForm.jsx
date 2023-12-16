@@ -1,20 +1,29 @@
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import FileInput from './FileInput.jsx';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
+import {
+    TextField,
+    Button,
+    Typography,
+    InputLabel,
+    InputAdornment,
+} from '@mui/material';
 
-import axios from '../api/axios';
+import FileInput from './FileInput.jsx';
+import ClipLoader from 'react-spinners/ClipLoader';
+
 import { useEffect, useRef, useState } from 'react';
-import { Formik, Form, Field, useFormikContext } from 'formik';
+import { Formik, Form } from 'formik';
 import { useSnackbar } from 'notistack';
 
+import useTourspots from '../hooks/useTourspots.js';
 import { tourspotSchema } from '../schemas.js';
+import { useNavigate } from 'react-router-dom';
+import useData from '../hooks/useData.js';
 
 function NewTourspotForm() {
+    const navigate = useNavigate();
+    const { nav } = useData();
     const titleRef = useRef();
+    const { createTourspot } = useTourspots();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         titleRef.current.focus();
@@ -29,8 +38,49 @@ function NewTourspotForm() {
         description: '',
     };
 
+    function goBack() {
+        navigate(nav.index);
+    }
+
     async function onSubmit(e) {
-        console.log(e);
+        setIsSubmitting(true);
+        const formData = new FormData();
+        formData.append('tourspot[title]', e.title);
+        formData.append('tourspot[location]', e.location);
+        formData.append('tourspot[expected_budget]', e.expected_budget);
+        formData.append('tourspot[description]', e.description);
+
+        e.images.forEach((image) => {
+            formData.append(`tourspot[images]`, image);
+        });
+
+        try {
+            const res = await createTourspot(formData);
+            if (res) {
+                if (res.success) {
+                    enqueueSnackbar('Tourspot created successfully!', {
+                        variant: 'success',
+                    });
+                    goBack();
+                } else {
+                    console.log(res);
+                    enqueueSnackbar(res.message, {
+                        variant: 'error',
+                    });
+                }
+            } else {
+                enqueueSnackbar('No response from server', {
+                    variant: 'error',
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            enqueueSnackbar('Something went wrong, please try again', {
+                variant: 'error',
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     return (
@@ -62,6 +112,7 @@ function NewTourspotForm() {
                                 helperText={touched.title && errors.title}
                                 value={values.title}
                                 fullWidth
+                                disabled={isSubmitting}
                                 required
                             />
                         </div>
@@ -78,6 +129,7 @@ function NewTourspotForm() {
                                 helperText={touched.location && errors.location}
                                 value={values.location}
                                 fullWidth
+                                disabled={isSubmitting}
                                 required
                             />
                         </div>
@@ -91,6 +143,7 @@ function NewTourspotForm() {
                                 fullWidth={true}
                                 error={touched.images && Boolean(errors.images)}
                                 helperText={touched.images && errors.images}
+                                disabled={isSubmitting}
                             />
                         </div>
                         <div className="mb-3">
@@ -107,7 +160,6 @@ function NewTourspotForm() {
                                         </InputAdornment>
                                     ),
                                 }}
-                                // label="Expected Budget"
                                 size="small"
                                 value={values.expected_budget}
                                 onChange={handleChange}
@@ -120,6 +172,7 @@ function NewTourspotForm() {
                                     errors.expected_budget
                                 }
                                 fullWidth
+                                disabled={isSubmitting}
                                 required
                             />
                         </div>
@@ -141,16 +194,25 @@ function NewTourspotForm() {
                                 fullWidth
                                 multiline
                                 rows={4}
+                                disabled={isSubmitting}
                                 required
                             />
                         </div>
                         <Button
+                            className="mb-4"
                             type="submit"
                             variant="contained"
                             color="success"
+                            disabled={isSubmitting}
                         >
                             Add Tourist Spot
                         </Button>
+                        <ClipLoader
+                            className="ms-4 mb-1"
+                            size="25px"
+                            color="rgb(124,124,124)"
+                            loading={isSubmitting}
+                        />
                     </Form>
                 )}
             </Formik>

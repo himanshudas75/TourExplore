@@ -1,10 +1,15 @@
 import ReviewCard from './ReviewCard.jsx';
 
-function ReviewCardStack({ reviews }) {
+function ReviewCardStack({ deleteOneReview, tourspotId, reviews }) {
     return (
         <>
             {reviews?.map((review) => (
-                <ReviewCard key={review._id} review={review} />
+                <ReviewCard
+                    key={review._id}
+                    review={review}
+                    tourspotId={tourspotId}
+                    deleteOneReview={deleteOneReview}
+                />
             ))}
         </>
     );

@@ -1,25 +1,27 @@
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-import Rating from '@mui/material/Rating';
-import Divider from '@mui/material/Divider';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+import {
+    Card,
+    CardContent,
+    Typography,
+    Button,
+    Rating,
+    Divider,
+    List,
+} from '@mui/material';
 
+import { useSnackbar } from 'notistack';
 import DeleteDialog from './DeleteDialog';
-import ImageCarousel from './ImageCarousel';
-import { colors } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useAuth from '../hooks/useAuth';
+import useAxiosPrivate from '../hooks/useAxiosPrivate.js';
+import useReviews from '../hooks/useReviews.js';
 
-function ReviewCard({ review }) {
+function ReviewCard({ deleteOneReview, tourspotId, review }) {
+    const { deleteReview } = useReviews();
+    const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
+    const { enqueueSnackbar } = useSnackbar();
 
+    const [isDeleting, setisDeleting] = useState(false);
     const [isDeleteReviewDialogOpen, setIsDeleteReviewDialogOpen] =
         useState(false);
     const openDeleteReviewDialog = () => {
@@ -30,7 +32,36 @@ function ReviewCard({ review }) {
         setIsDeleteReviewDialogOpen(false);
     };
 
-    async function deleteReview() {}
+    async function removeReview() {
+        try {
+            setisDeleting(true);
+            const res = await deleteReview(tourspotId, review._id);
+            if (res) {
+                if (res.success) {
+                    enqueueSnackbar('Review deleted successfully!', {
+                        variant: 'success',
+                    });
+                    deleteOneReview(review._id);
+                    setIsDeleteReviewDialogOpen(false);
+                } else {
+                    enqueueSnackbar(res.message, {
+                        variant: 'error',
+                    });
+                }
+            } else {
+                enqueueSnackbar('No response from server', {
+                    variant: 'error',
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            enqueueSnackbar('Something went wrong, please try again', {
+                variant: 'error',
+            });
+        } finally {
+            setisDeleting(false);
+        }
+    }
 
     return (
         <Card elevation={3} className="mb-4">
@@ -81,7 +112,8 @@ function ReviewCard({ review }) {
             <DeleteDialog
                 isOpen={isDeleteReviewDialogOpen}
                 handleClose={closeDeleteReviewDialog}
-                deleteAction={deleteReview}
+                deleteAction={removeReview}
+                disabled={isDeleting}
             />
         </Card>
     );

@@ -9,13 +9,23 @@ import LogoutDialog from './LogoutDialog.jsx';
 import ChangePasswordDialog from './ChangePasswordDialog.jsx';
 import DeleteDialog from './DeleteDialog.jsx';
 
-import { useState, useEffect } from 'react';
-
+import { useState } from 'react';
+import useUser from '../hooks/useUser.js';
 import useAuth from '../hooks/useAuth.js';
+import { useNavigate } from 'react-router-dom';
+import useData from '../hooks/useData.js';
+
+import { useSnackbar } from 'notistack';
 
 function UserSettings() {
+    const { enqueueSnackbar } = useSnackbar();
+    const { nav } = useData();
+    const navigate = useNavigate();
+    const { deleteUser } = useUser();
     const { auth } = useAuth();
     const [anchorElUser, setAnchorElUser] = useState(null);
+
+    const [isDeleting, setisDeleting] = useState(false);
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -58,6 +68,36 @@ function UserSettings() {
         { name: 'Logout', link: openLogoutDialog },
         { name: 'Delete User', link: openDeleteUserDialog },
     ];
+
+    async function removeUser() {
+        try {
+            setisDeleting(true);
+            const res = await deleteUser();
+            if (res) {
+                if (res.success) {
+                    enqueueSnackbar('User deleted successfully!', {
+                        variant: 'success',
+                    });
+                    navigate(nav.login);
+                } else {
+                    enqueueSnackbar(res.message, {
+                        variant: 'error',
+                    });
+                }
+            } else {
+                enqueueSnackbar('No response from server', {
+                    variant: 'error',
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            enqueueSnackbar('Something went wrong, please try again', {
+                variant: 'error',
+            });
+        } finally {
+            setisDeleting(false);
+        }
+    }
 
     return (
         <Box
@@ -112,6 +152,8 @@ function UserSettings() {
                 description="All user data will be deleted. This action cannot be undone."
                 isOpen={isDeleteUserDialogOpen}
                 handleClose={closeDeleteUserDialog}
+                deleteAction={removeUser}
+                disabled={isDeleting}
             />
         </Box>
     );

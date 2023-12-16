@@ -35,6 +35,17 @@ export const loginSchema = Yup.object().shape({
         .required(m.required),
 });
 
+export const passwordSchema = Yup.object().shape({
+    password: Yup.string()
+        .trim()
+        .min(8, 'Must be greater than 8 characters')
+        .max(50, m.max50)
+        .required(m.required),
+    confirmPassword: Yup.string()
+        .required('Please re-type your password')
+        .oneOf([Yup.ref('password'), null], 'Passwords do not match'),
+});
+
 export const registerSchema = Yup.object().shape({
     username: Yup.string()
         .trim()
@@ -52,6 +63,9 @@ export const registerSchema = Yup.object().shape({
         .min(8, 'Must be greater than 8 characters')
         .max(50, m.max50)
         .required(m.required),
+    confirmPassword: Yup.string()
+        .required('Please re-type your password')
+        .oneOf([Yup.ref('password'), null], 'Passwords do not match'),
 });
 
 export const tourspotSchema = Yup.object().shape({

@@ -17,7 +17,7 @@ const generateToken = (user, token_type) => {
 
     if (token_type === 'access') {
         secret = process.env.ACCESS_TOKEN_SECRET;
-        options.expiresIn = '30s';
+        options.expiresIn = '5m';
     }
 
     const token = jwt.sign(payload, secret, options);
@@ -156,6 +156,7 @@ module.exports.logout = async (req, res, next) => {
 
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
     res.json({
+        success: true,
         message: 'Logged out successfully',
         user: {
             user_id: savedUser._id,
@@ -170,6 +171,7 @@ module.exports.changePassword = async (req, res) => {
     console.log(user);
     user.password = hashSync(password, 12);
     await user.save();
+
     res.json({
         success: true,
         message: 'Password changed successfully',
@@ -195,6 +197,12 @@ module.exports.deleteUser = async (req, res) => {
     }
 
     await User.findByIdAndDelete(req.user._id);
+    if (cookies?.jwt)
+        res.clearCookie('jwt', {
+            httpOnly: true,
+            sameSite: 'None',
+            secure: true,
+        });
     res.json({
         success: true,
         message: 'User deleted successfully',
