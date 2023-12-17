@@ -1,0 +1,11 @@
+.Header {
+    background-color: rgb(43, 48, 53) !important;
+}
+
+.Header button {
+    color: rgb(159, 162, 164);
+}
+
+.Header button:hover {
+    color: white;
+}

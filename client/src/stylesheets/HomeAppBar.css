@@ -1,0 +1,26 @@
+.homeAppBar {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.homeAppBar .button-text {
+    font-weight: 700 !important;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 0.25rem 0;
+    margin-left: 1rem;
+    border-bottom: 0.25rem solid transparent;
+}
+
+.homeAppBar .button-text:hover {
+    color: rgba(255, 255, 255, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+}
+
+.homeAppBar .menu-buttons button:hover {
+    background: transparent;
+}
+
+.homeAppBar .button-text.active {
+    color: white;
+    border-bottom-color: white;
+}
