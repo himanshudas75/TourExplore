@@ -20,13 +20,13 @@ CLOUDINARY_CLOUD_NAME=<CLOUD NAME>
 CLOUDINARY_API_KEY=<API KEY>
 CLOUDINARY_API_SECRET=<API SECRET>
 
-BING_API_KEY=<API KEY>
-
 PORT=<OPTIONAL: SPECIFY PORT FOR SERVER (DEFAULT IS 3000)>
 
 VITE_API_BASE_URL=http://localhost:<SERVER PORT>/api/
 VITE_BING_API_KEY=<ENTER BING API KEY AGAIN>
 ```
+
+You can add a **.env** file in the root directory with the above configuration.
 
 #### Development Mode
 
