@@ -4,8 +4,13 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "node index.js",
-        "dev": "nodemon index.js"
+        "server": "node index.js",
+        "server-dev": "nodemon index.js",
+        "client-dev": "npm run dev --prefix client",
+        "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\"",
+        "client-preview": "npm run preview --prefix client",
+        "build": "npm run build --prefix client",
+        "prod": "npm install && npm install --prefix client && pm2 stop TourExplore; pm2 delete TourExplore; npm run build && NODE_ENV=production pm2 start index.js --name TourExplore"
     },
     "keywords": [],
     "author": "",
@@ -14,6 +19,7 @@
         "axios": "^1.6.2",
         "bcrypt": "^5.1.1",
         "cloudinary": "^1.41.0",
+        "concurrently": "^8.2.2",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
         "dotenv": "^16.3.1",

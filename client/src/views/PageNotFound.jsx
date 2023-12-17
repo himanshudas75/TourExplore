@@ -18,12 +18,11 @@ function NotFoundImage() {
         >
             <div className="row">
                 <div className="col-xs-12 col-sm-5 col-md-5 offset-md-1 d-flex flex-column justify-content-center align-items-center">
-                    <embed
+                    <img
                         className="desktop-404"
-                        src="/src/assets/notfound.svg"
-                        alt="Image"
+                        src="/notfound.png"
                         style={{ width: '70%' }}
-                    ></embed>
+                    />
                 </div>
                 <div className="col-xs-12 col-sm-5 col-md-5 d-flex flex-column justify-content-center">
                     <div className="row">

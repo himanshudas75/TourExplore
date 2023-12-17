@@ -9,7 +9,7 @@ function Auth() {
                 <div className="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
                     <Card elevation={10}>
                         <CardMedia
-                            image="/src/assets/login-image.jpg"
+                            image="/login-image.jpg"
                             title="login image"
                             component="img"
                         />

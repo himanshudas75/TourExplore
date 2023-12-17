@@ -22,7 +22,7 @@ function TourspotCardHorizontal({ tourspot }) {
                         image={
                             tourspot.images.length !== 0
                                 ? tourspot.images[0].url
-                                : '/src/assets/no-image.png'
+                                : '/no-image.png'
                         }
                         title="Tourspot Image"
                         component="img"

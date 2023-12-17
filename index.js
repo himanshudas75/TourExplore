@@ -1,6 +1,6 @@
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config({ path: './.env' });
-}
+// if (process.env.NODE_ENV !== 'production') {
+require('dotenv').config({ path: './.env' });
+// }
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -45,11 +45,36 @@ app.use(
 );
 
 app.use(helmet());
-const scriptSrcUrls = [];
-const styleSrcUrls = [];
-const connectSrcUrls = [];
+const scriptSrcUrls = [
+    'https://stackpath.bootstrapcdn.com/',
+    'http://www.bing.com',
+    'http://r.bing.com',
+    'https://kit.fontawesome.com/',
+    'https://cdnjs.cloudflare.com/',
+    'https://cdn.jsdelivr.net',
+    'https://dev.virtualearth.net',
+];
+const styleSrcUrls = [
+    'https://cdn.jsdelivr.net',
+    'http://r.bing.com',
+    'https://kit-free.fontawesome.com/',
+    'https://stackpath.bootstrapcdn.com/',
+    'https://fonts.googleapis.com/',
+    'https://use.fontawesome.com/',
+];
+const connectSrcUrls = [
+    'http://www.bing.com',
+    'https://t.ssl.ak.tiles.virtualearth.net',
+];
 const fontSrcUrls = [];
-const imgSrcUrls = [];
+const imgSrcUrls = [
+    `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`,
+    'https://images.unsplash.com/',
+    'https://wallpapercave.com/',
+    'https://images.pexels.com/',
+    'https://t.ssl.ak.dynamic.tiles.virtualearth.net',
+    'http://r.bing.com',
+];
 
 app.use(
     helmet.contentSecurityPolicy({
@@ -61,7 +86,7 @@ app.use(
             workerSrc: ["'self'", 'blob:'],
             objectSrc: [],
             imgSrc: ["'self'", 'blob:', 'data:', ...imgSrcUrls],
-            fontSrc: ["'self'", ...fontSrcUrls],
+            fontSrc: ["'self'", 'data:', ...fontSrcUrls],
         },
     })
 );
@@ -87,11 +112,9 @@ app.use((err, req, res, next) => {
 });
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('../client/dist'));
+    app.use(express.static('client/dist'));
     app.get('*', (req, res) => {
-        res.sendFile(
-            path.resolve(__dirname, '..', 'client', 'dist', 'index.html')
-        );
+        res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'));
     });
 }
 

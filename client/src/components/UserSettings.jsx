@@ -111,7 +111,7 @@ function UserSettings() {
         >
             <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} className="ms-3 mb-1">
-                    <Avatar alt="Avatar" src="/src/assets/avatar.png" />
+                    <Avatar alt="Avatar" src="/avatar.png" />
                 </IconButton>
             </Tooltip>
             <Typography variant="p" className="homebar-username ms-2 mb-1">
