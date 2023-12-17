@@ -1,4 +1,4 @@
-import { TextField, Button, Typography } from '@mui/material';
+import { TextField, Button, Typography, Checkbox } from '@mui/material';
 
 import { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { useSnackbar } from 'notistack';
 import { registerSchema } from '../schemas.js';
 import useData from '../hooks/useData.js';
 import useUser from '../hooks/useUser.js';
+import PersistLoginCheckbox from './PersistLoginCheckbox.jsx';
 
 function RegisterForm() {
     const { register } = useUser();
@@ -128,7 +129,7 @@ function RegisterForm() {
                                 required
                             />
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-1">
                             <TextField
                                 id="confirmPassword"
                                 label="Confirm Password"
@@ -148,6 +149,9 @@ function RegisterForm() {
                                 fullWidth
                                 required
                             />
+                        </div>
+                        <div className="mb-1">
+                            <PersistLoginCheckbox />
                         </div>
                         <Button
                             fullWidth

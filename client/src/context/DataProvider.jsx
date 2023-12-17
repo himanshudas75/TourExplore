@@ -1,11 +1,8 @@
-import { createContext, useState } from 'react';
-import { useEffect } from 'react';
-import axios from '../api/axios';
+import { createContext } from 'react';
 
 const DataContext = createContext({});
 
 export const DataProvider = ({ children }) => {
-    const [tourspots, setTourspots] = useState([]);
     const nav = {
         home: '/',
         index: '/tourspots',
@@ -15,22 +12,8 @@ export const DataProvider = ({ children }) => {
         new: '/tourspots/new',
     };
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const res = await axios.get('/tourspots');
-                setTourspots(res.data);
-            } catch (err) {
-                console.error(err);
-            }
-        }
-        fetchData();
-    }, []);
-
     return (
-        <DataContext.Provider value={{ nav, tourspots, setTourspots }}>
-            {children}
-        </DataContext.Provider>
+        <DataContext.Provider value={{ nav }}>{children}</DataContext.Provider>
     );
 };
 

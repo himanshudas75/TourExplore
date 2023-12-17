@@ -1,4 +1,4 @@
-function GetClusterMap(mapToken, tourspots, div_id) {
+function GetClusterMap(mapToken, tourspots, div_id, func) {
     const center = new Microsoft.Maps.Location(30.390016, 17.288664);
     const map = new Microsoft.Maps.Map(`#${div_id}`, {
         credentials: mapToken,

@@ -37,20 +37,24 @@ function IndexPage() {
 
     return (
         <>
-            <div
-                className="container-flex mb-4 p-0 m-0"
-                style={{ width: '100%', height: '450px' }}
-            >
-                <DisplayMap
-                    action="cluster"
-                    tourspots={tourspots}
-                    div_id="map-cluster"
-                />
-            </div>
-            <div className="container">
-                {!tourspots?.not_set ? (
-                    <TourspotCardHorizontalStack tourspots={tourspots} />
-                ) : (
+            {!tourspots?.not_set ? (
+                <>
+                    <div
+                        className="container-flex mb-4 p-0 m-0"
+                        style={{ width: '100%', height: '450px' }}
+                    >
+                        <DisplayMap
+                            action="cluster"
+                            tourspots={tourspots}
+                            div_id="map-cluster"
+                        />
+                    </div>
+                    <div className="container">
+                        <TourspotCardHorizontalStack tourspots={tourspots} />
+                    </div>
+                </>
+            ) : (
+                <div className="container">
                     <div
                         className="container"
                         style={{
@@ -61,8 +65,8 @@ function IndexPage() {
                     >
                         <Loading />
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </>
     );
 }
