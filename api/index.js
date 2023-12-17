@@ -8,7 +8,7 @@ const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
-
+const path = require('path');
 const passport = require('./utils/passport');
 
 const dbUrl = process.env.MONGODB_URL;
@@ -45,36 +45,11 @@ app.use(
 );
 
 app.use(helmet());
-const scriptSrcUrls = [
-    'https://stackpath.bootstrapcdn.com/',
-    'http://www.bing.com',
-    'http://r.bing.com',
-    'https://kit.fontawesome.com/',
-    'https://cdnjs.cloudflare.com/',
-    'https://cdn.jsdelivr.net',
-    'https://dev.virtualearth.net',
-];
-const styleSrcUrls = [
-    'https://cdn.jsdelivr.net',
-    'http://r.bing.com',
-    'https://kit-free.fontawesome.com/',
-    'https://stackpath.bootstrapcdn.com/',
-    'https://fonts.googleapis.com/',
-    'https://use.fontawesome.com/',
-];
-const connectSrcUrls = [
-    'http://www.bing.com',
-    'https://t.ssl.ak.tiles.virtualearth.net',
-];
+const scriptSrcUrls = [];
+const styleSrcUrls = [];
+const connectSrcUrls = [];
 const fontSrcUrls = [];
-const imgSrcUrls = [
-    `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`,
-    'https://images.unsplash.com/',
-    'https://wallpapercave.com/',
-    'https://images.pexels.com/',
-    'https://t.ssl.ak.dynamic.tiles.virtualearth.net',
-    'http://r.bing.com',
-];
+const imgSrcUrls = [];
 
 app.use(
     helmet.contentSecurityPolicy({
@@ -110,6 +85,15 @@ app.use((err, req, res, next) => {
         message: err.message,
     });
 });
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('../client/dist'));
+    app.get('*', (req, res) => {
+        res.sendFile(
+            path.resolve(__dirname, '..', 'client', 'dist', 'index.html')
+        );
+    });
+}
 
 app.listen(port, () => {
     console.log(`Serving on port ${port}`);
