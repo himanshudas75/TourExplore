@@ -8,11 +8,9 @@ import {
 
 import FileInput from './FileInput.jsx';
 import ClipLoader from 'react-spinners/ClipLoader';
-
 import { useEffect, useRef, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { useSnackbar } from 'notistack';
-
 import useTourspots from '../hooks/useTourspots.js';
 import { tourspotSchema } from '../schemas.js';
 import { useNavigate } from 'react-router-dom';

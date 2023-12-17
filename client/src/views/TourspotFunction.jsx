@@ -6,6 +6,7 @@ import EditTourspotForm from '../components/EditTourspotForm';
 import Loading from '../components/Loading.jsx';
 import { useSnackbar } from 'notistack';
 import PageNotFound from './PageNotFound.jsx';
+
 function TourspotFunction({ action }) {
     const { enqueueSnackbar } = useSnackbar();
     const { tourspotId } = useParams();

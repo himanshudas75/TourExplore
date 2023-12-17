@@ -12,12 +12,10 @@ import { useSnackbar } from 'notistack';
 import DeleteDialog from './DeleteDialog';
 import { useState } from 'react';
 import useAuth from '../hooks/useAuth';
-import useAxiosPrivate from '../hooks/useAxiosPrivate.js';
 import useReviews from '../hooks/useReviews.js';
 
 function ReviewCard({ deleteOneReview, tourspotId, review }) {
     const { deleteReview } = useReviews();
-    const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
     const { enqueueSnackbar } = useSnackbar();
 

@@ -3,11 +3,9 @@ import { TextField, Button, Typography } from '@mui/material';
 import { useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Formik, Form } from 'formik';
-
 import { loginSchema } from '../schemas.js';
 import { useSnackbar } from 'notistack';
 import useData from '../hooks/useData.js';
-
 import useUser from '../hooks/useUser.js';
 
 function LoginForm() {
@@ -53,6 +51,7 @@ function LoginForm() {
                 });
             }
         } catch (err) {
+            console.error(err);
             enqueueSnackbar('Something went wrong, please try again', {
                 variant: 'error',
             });

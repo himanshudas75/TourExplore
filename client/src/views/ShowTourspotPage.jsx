@@ -7,7 +7,6 @@ import ReviewForm from '../components/ReviewForm.jsx';
 import ReviewCardStack from '../components/ReviewCardStack.jsx';
 
 import PageNotFound from '../views/PageNotFound.jsx';
-import '../stylesheets/ShowTourspotPage.css';
 import useAuth from '../hooks/useAuth.js';
 import Loading from '../components/Loading.jsx';
 import { useSnackbar } from 'notistack';

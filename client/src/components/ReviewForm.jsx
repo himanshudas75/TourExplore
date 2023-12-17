@@ -42,7 +42,6 @@ function ReviewForm({ tourspotId, addNewReview }) {
     };
 
     async function onSubmit(e, { resetForm }) {
-        resetForm(initialValues);
         const data = {
             review: {
                 title: e.title,
@@ -64,6 +63,7 @@ function ReviewForm({ tourspotId, addNewReview }) {
                     enqueueSnackbar('Review created successfully!', {
                         variant: 'success',
                     });
+                    resetForm(initialValues);
                     addNewReview(newReview);
                 } else {
                     enqueueSnackbar(res.message, {

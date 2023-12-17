@@ -64,6 +64,8 @@ module.exports.register = async (req, res, next) => {
     });
 };
 
+const Review = require('../models/review');
+
 module.exports.login = async (req, res, next) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username: username });
@@ -168,7 +170,6 @@ module.exports.logout = async (req, res, next) => {
 module.exports.changePassword = async (req, res) => {
     const { password } = req.body;
     const user = await User.findById(req.user._id);
-    console.log(user);
     user.password = hashSync(password, 12);
     await user.save();
 
@@ -183,6 +184,7 @@ module.exports.changePassword = async (req, res) => {
 };
 
 module.exports.deleteUser = async (req, res) => {
+    const cookies = req.cookies;
     const user = await User.findById(req.user._id);
     const tourspots = await Tourspot.find({
         author: {

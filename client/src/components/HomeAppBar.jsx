@@ -1,25 +1,18 @@
+import {
+    AppBar,
+    Box,
+    Toolbar,
+    IconButton,
+    Typography,
+    Menu,
+    Container,
+    Button,
+    MenuItem,
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Tooltip from '@mui/material/Tooltip';
-import Avatar from '@mui/material/Avatar';
-
-import LogoutDialog from './LogoutDialog.jsx';
-import ChangePasswordDialog from './ChangePasswordDialog.jsx';
-
-import { v4 as uuid } from 'uuid';
-
 import '../stylesheets/HomeAppBar.css';
 import useData from '../hooks/useData.js';
 import useAuth from '../hooks/useAuth.js';

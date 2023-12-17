@@ -1,10 +1,8 @@
-import HomeAppBar from '../components/HomeAppBar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import { Typography, Button } from '@mui/material';
 
+import HomeAppBar from '../components/HomeAppBar';
 import { useNavigate } from 'react-router-dom';
 import '../stylesheets/Home.css';
-
 import useData from '../hooks/useData.js';
 
 function Home() {
@@ -29,7 +27,6 @@ function Home() {
                     </p>
                     <Button
                         onClick={() => navigate(nav.index)}
-                        // href="/tourspots"
                         variant="contained"
                         className="bg-white"
                         size="large"

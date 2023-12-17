@@ -1,17 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
 
-import './stylesheets/App.css';
-
-import axios from './api/axios';
-
 import Home from './views/Home.jsx';
 import IndexPage from './views/IndexPage.jsx';
 import Layout from './Layout.jsx';
 import Auth from './views/Auth.jsx';
 import ShowTourspotPage from './views/ShowTourspotPage.jsx';
-import NewTourspotForm from './components/NewTourspotForm.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
-import EditTourspotForm from './components/EditTourspotForm.jsx';
 import PersistLogin from './components/PersistLogin.jsx';
 import LoginForm from './components/LoginForm.jsx';
 import RegisterForm from './components/RegisterForm.jsx';

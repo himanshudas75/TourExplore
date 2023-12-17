@@ -27,11 +27,15 @@ const userSchema = new Schema({
 
 userSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
-        const tourspots = await Tourspot.find({
-            author: {
-                $eq: doc._id,
+        // Delete all the tourspots and their reviews whose author is this user
+        const tourspots = await Tourspot.find(
+            {
+                author: {
+                    $eq: doc._id,
+                },
             },
-        });
+            'reviews'
+        );
 
         for (let tourspot of tourspots) {
             await Review.deleteMany({
@@ -41,15 +45,54 @@ userSchema.post('findOneAndDelete', async function (doc) {
             });
         }
 
-        await Review.deleteMany({
+        await Tourspot.deleteMany({
             author: {
                 $eq: doc._id,
             },
         });
 
-        await Tourspot.deleteMany({
-            author: {
-                $eq: doc._id,
+        // Now delete all the reviews written by this user
+        const userReviews = await Review.find(
+            {
+                author: { $eq: doc._id },
+            },
+            '_id tourspot'
+        );
+
+        const temp_set = new Set();
+        userReviews.forEach((review) => {
+            if (!temp_set.has(review.tourspot.toString())) {
+                temp_set.add(review.tourspot.toString());
+            }
+        });
+        const tourspotIds = Array.from(temp_set);
+
+        temp_set.clear();
+        userReviews.forEach((review) => {
+            if (!temp_set.has(review._id.toString())) {
+                temp_set.add(review._id.toString());
+            }
+        });
+        const reviewIds = Array.from(temp_set);
+
+        await Tourspot.updateMany(
+            {
+                _id: {
+                    $in: tourspotIds,
+                },
+            },
+            {
+                $pull: {
+                    reviews: {
+                        $in: reviewIds,
+                    },
+                },
+            }
+        );
+
+        await Review.deleteMany({
+            _id: {
+                $in: reviewIds,
             },
         });
     }

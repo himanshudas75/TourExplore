@@ -3,7 +3,13 @@ const { cloudinary } = require('../utils/cloudinary');
 const { findLocation } = require('../utils/findLocation');
 
 module.exports.getAllTourspots = async (req, res) => {
-    const tourspots = await Tourspot.find({}).sort({ createdAt: 1 });
+    const tourspots = await Tourspot.find({})
+        .populate('author', 'username')
+        .sort({ createdAt: -1 });
+    tourspots.forEach((tourspot) => {
+        tourspot.images.sort((a, b) => b.createdAt - a.createdAt);
+    });
+
     res.json({
         success: true,
         message: 'Successfully fetched all tourspots',
@@ -21,13 +27,21 @@ module.exports.getTourspot = async (req, res) => {
             },
         })
         .populate('author', 'username');
+
+    // Sort the data
+    tourspot.reviews = tourspot.reviews.sort(
+        (a, b) => b.createdAt - a.createdAt
+    );
+    tourspot.images = tourspot.images.sort((a, b) => b.createdAt - a.createdAt);
+
+    // Add thumbnail info
     const imagesWithVirtual = tourspot.images.map((image) => ({
         ...image.toJSON(),
         thumbnail: image.thumbnail,
     }));
-    tourspot.reviews = tourspot.reviews.sort({ createdAt: 1 });
     const tourspotJSON = tourspot.toJSON();
-    tourspotJSON.images = imagesWithVirtual.sort({ createdAt: 1 });
+    tourspotJSON.images = imagesWithVirtual;
+
     res.json({
         success: true,
         message: 'Successfully fetched tourspot',
@@ -82,9 +96,11 @@ module.exports.updateTourspot = async (req, res, next) => {
 module.exports.deleteTourspot = async (req, res) => {
     const { tourspotId } = req.params;
     const tourspot = await Tourspot.findById(tourspotId);
+
     for (let image of tourspot.images) {
         await cloudinary.uploader.destroy(image.filename);
     }
+
     await Tourspot.findByIdAndDelete(tourspotId);
     res.json({
         success: true,

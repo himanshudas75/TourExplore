@@ -1,24 +1,23 @@
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import {
+    TextField,
+    Button,
+    Typography,
+    InputLabel,
+    InputAdornment,
+    Checkbox,
+    Box,
+    Grid,
+} from '@mui/material';
 import FileInput from './FileInput.jsx';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import Checkbox from '@mui/material/Checkbox';
-import Box from '@mui/material/Box';
 import ClipLoader from 'react-spinners/ClipLoader';
-import axios from '../api/axios';
-import { useEffect, useRef, useState } from 'react';
-import { Formik, Form, Field, useFormikContext } from 'formik';
-import { useSnackbar } from 'notistack';
-import Grid from '@mui/material/Grid';
 
+import { useEffect, useRef, useState } from 'react';
+import { Formik, Form } from 'formik';
+import { useSnackbar } from 'notistack';
 import { tourspotSchema } from '../schemas.js';
 import useData from '../hooks/useData.js';
 import { useNavigate } from 'react-router-dom';
 import useTourspots from '../hooks/useTourspots.js';
-import Loading from './Loading.jsx';
 
 function EditTourspotForm({ tourspot }) {
     const titleRef = useRef();
@@ -57,7 +56,7 @@ function EditTourspotForm({ tourspot }) {
             formData.append(`tourspot[images]`, image);
         });
 
-        e.deleteImages.forEach((deleteImage, index) => {
+        e.deleteImages.forEach((deleteImage) => {
             formData.append(`deleteImages`, deleteImage);
         });
 
@@ -166,7 +165,6 @@ function EditTourspotForm({ tourspot }) {
                                         </InputAdornment>
                                     ),
                                 }}
-                                // label="Expected Budget"
                                 size="small"
                                 value={values.expected_budget}
                                 onChange={handleChange}

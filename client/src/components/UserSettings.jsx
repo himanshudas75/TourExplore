@@ -1,14 +1,16 @@
-import Box from '@mui/material/Box';
-import Tooltip from '@mui/material/Tooltip';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import {
+    Box,
+    Tooltip,
+    Avatar,
+    IconButton,
+    Typography,
+    Menu,
+    MenuItem,
+} from '@mui/material';
+
 import LogoutDialog from './LogoutDialog.jsx';
 import ChangePasswordDialog from './ChangePasswordDialog.jsx';
 import DeleteDialog from './DeleteDialog.jsx';
-
 import { useState } from 'react';
 import useUser from '../hooks/useUser.js';
 import useAuth from '../hooks/useAuth.js';

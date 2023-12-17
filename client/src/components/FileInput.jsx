@@ -16,12 +16,7 @@ const FileInput = ({
 }) => {
     const { setFieldValue } = useFormikContext();
 
-    // console.log(err, helperText);
-
     const handleFileChange = (files) => {
-        // console.log('Value change');
-        // console.log(files);
-        // console.log(err, helperText);
         setFieldValue(field, files);
     };
 

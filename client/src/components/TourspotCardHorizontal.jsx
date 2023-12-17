@@ -1,12 +1,13 @@
+import {
+    Card,
+    CardContent,
+    CardMedia,
+    Typography,
+    CardActions,
+    Button,
+} from '@mui/material';
+
 import { useNavigate } from 'react-router-dom';
-
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-
 import useData from '../hooks/useData.js';
 
 function TourspotCardHorizontal({ tourspot }) {
@@ -33,8 +34,11 @@ function TourspotCardHorizontal({ tourspot }) {
                         <Typography gutterBottom variant="h5" component="div">
                             {tourspot.title}
                         </Typography>
-                        <Typography component="p" className="mb-3">
+                        <Typography component="p" className="mb-1">
                             {tourspot.description}
+                        </Typography>
+                        <Typography variant="body2" className="mb-3">
+                            By <strong>{tourspot.author.username}</strong>
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             {tourspot.location}

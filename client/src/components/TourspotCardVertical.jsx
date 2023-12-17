@@ -1,18 +1,18 @@
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+import {
+    Card,
+    CardContent,
+    CardMedia,
+    Typography,
+    CardActions,
+    Button,
+    Divider,
+    List,
+    ListItem,
+    ListItemText,
+} from '@mui/material';
 
 import ImageCarousel from './ImageCarousel';
-import { colors } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
 import { useSnackbar } from 'notistack';
 import DeleteDialog from './DeleteDialog';
 import { useState } from 'react';

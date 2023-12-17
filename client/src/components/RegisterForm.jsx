@@ -1,6 +1,4 @@
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { TextField, Button, Typography } from '@mui/material';
 
 import { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -57,6 +55,7 @@ function RegisterForm() {
                 });
             }
         } catch (err) {
+            console.error(err);
             enqueueSnackbar('Something went wrong, please try again', {
                 variant: 'error',
             });
