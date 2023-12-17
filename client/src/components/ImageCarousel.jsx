@@ -17,11 +17,17 @@ function ImageCarousel({ images }) {
             controls={images.length > 1 ? true : false}
             indicators={false}
         >
-            {images.map((img) => (
+            {images?.length > 0 ? (
+                images.map((img) => (
+                    <Carousel.Item key={uuid()}>
+                        <img src={img} className="d-block w-100" />
+                    </Carousel.Item>
+                ))
+            ) : (
                 <Carousel.Item key={uuid()}>
-                    <img src={img} className="d-block w-100" />
+                    <img src="/no-image.png" className="d-block w-100" />
                 </Carousel.Item>
-            ))}
+            )}
         </Carousel>
     );
 }

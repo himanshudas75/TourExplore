@@ -10,7 +10,9 @@
         "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\"",
         "client-preview": "npm run preview --prefix client",
         "build": "npm run build --prefix client",
-        "prod": "npm install && npm install --prefix client && pm2 stop TourExplore; pm2 delete TourExplore; npm run build && NODE_ENV=production pm2 start index.js --name TourExplore"
+        "setup": "npm install && npm install --prefix client",
+        "stop": "pm2 stop TourExplore 2>/dev/null; pm2 delete TourExplore 2>/dev/null;",
+        "prod": "npm run setup && npm run stop; npm run build && NODE_ENV=production pm2 start index.js --name TourExplore"
     },
     "keywords": [],
     "author": "",
