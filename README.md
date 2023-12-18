@@ -42,7 +42,7 @@ You can add a **.env** file in the root directory with the above configuration.
 You can generate the secrets using the following command on **node**:
 
 ```js
-require('crypto').randomBytes(32).toString('hex');
+console.log(require('crypto').randomBytes(32).toString('hex'));
 ```
 
 #### Development Mode
