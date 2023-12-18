@@ -5,6 +5,8 @@ Ever discovered an interesting place in a popular tourist destination which no o
 TourExplore is for travel enthusiasts to share information about places they discovered with the world.  
 Never miss anything fun on your next trip!
 
+A live deployment of the website can be found [here](https://tour-explore.onrender.com/)
+
 ### Features and Tech Stack
 
 -   Developed and tested on **Node v20.10.0**
