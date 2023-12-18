@@ -3,23 +3,17 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const express = require('express');
-const mongoose = require('mongoose');
+
 const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const passport = require('./utils/passport');
+const connectDB = require('./utils/mongoConnect');
 
-const dbUrl = process.env.MONGODB_URL;
+connectDB();
 const port = process.env.PORT || 3000;
-
-mongoose.connect(dbUrl);
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-    console.log('Database connected');
-});
 
 require('./models/user');
 require('./models/review');
