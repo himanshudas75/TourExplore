@@ -39,6 +39,12 @@ VITE_BING_API_KEY=<ENTER BING API KEY AGAIN>
 
 You can add a **.env** file in the root directory with the above configuration.
 
+You can generate the secrets using the following command on **node**:
+
+```js
+require('crypto').randomBytes(32).toString('hex');
+```
+
 #### Development Mode
 
 1. Install nodemon using:
