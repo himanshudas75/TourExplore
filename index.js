@@ -59,6 +59,7 @@ const styleSrcUrls = [
 const connectSrcUrls = [
     'http://www.bing.com',
     'https://t.ssl.ak.tiles.virtualearth.net',
+    'http://localhost:3000',
 ];
 const fontSrcUrls = [];
 const imgSrcUrls = [
