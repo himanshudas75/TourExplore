@@ -59,7 +59,7 @@ const styleSrcUrls = [
 const connectSrcUrls = [
     'http://www.bing.com',
     'https://t.ssl.ak.tiles.virtualearth.net',
-    'http://localhost:3000',
+    'https://tour-explore.onrender.com/',
 ];
 const fontSrcUrls = [];
 const imgSrcUrls = [
