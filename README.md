@@ -64,7 +64,11 @@ The client runs on port 5713 by default and the server on 3000 (unless a port is
     ```bash
     npm install pm2 -g
     ```
-2. Run the following command:
+2. Run the following command to build the client:
+    ```bash
+    npm run build
+    ```
+3. Now, for running the app:
     ```bash
     npm run prod
     ```
