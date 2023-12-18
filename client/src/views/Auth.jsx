@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 
 function Auth() {
     return (
-        <div className="container justify-content-center align-items-center mt-5 mb-5">
+        <div className="container justify-content-center align-items-center mt-4 mb-5">
             <div className="row">
                 <div className="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
                     <Card elevation={10}>
