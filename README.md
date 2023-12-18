@@ -5,13 +5,22 @@ Ever discovered an interesting place in a popular tourist destination which no o
 TourExplore is for travel enthusiasts to share information about places they discovered with the world.  
 Never miss anything fun on your next trip!
 
+### Features and Tech Stack
+
+-   Developed and tested on **Node v20.10.0**
+-   **Express** is used to develop the backend
+-   **React** used for frontend
+-   **Passport.js** used for implementing authentication (using JWT access and refresh tokens)
+-   Users can upload images which are stored on the cloud using **Cloudinary** (Using **multer** for image upload)
+-   All data stored in **MongoDB**
+
 ### Running the application
 
 Scripts have been provided in the **package.json** file in the root directory. You can have a look at it to know about all the different scripts available.
 
 You need to create the following environment variables before running:
 
-```.env
+```env
 MONGODB_URL=<YOUR MONGO URL>
 ACCESS_TOKEN_SECRET=<GENERATE A SECRET>
 REFRESH_TOKEN_SECRET=<GENERATE A DIFFERENT SECRET>
@@ -52,7 +61,7 @@ The client runs on port 5713 by default and the server on 3000 (unless a port is
     npm run prod
     ```
 
-You can access the website on port 3000 by default (unless a port is specified in the environment variables)
+You can access the web-app on port 3000 by default (unless a port is specified in the environment variables)
 
 _**Note:** Reading environment variables by the server is disabled in production mode, to enable it you can remove the condition from the following piece of code in the **index.js** file_
 
@@ -62,6 +71,13 @@ if (process.env.NODE_ENV !== 'production') {
 }
 ```
 
-#### Versions
+To stop the web-app, run:
 
-This application was tested on **Node v20.10.0**
+```bash
+npm run stop
+```
+
+### Seeding the Database
+
+The **seeder.js** provided in the **seed** directory can be used for seeding the database.  
+_**Note:** You need to first run `npm install` in the root directory before running the seeder_
